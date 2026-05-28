@@ -1,0 +1,1550 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Daily Dictation - Japandi Learning Experience</title>
+  
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- Google Fonts: Inter & Playfair Display -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+  
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+            serif: ['Playfair Display', 'serif'],
+          },
+          colors: {
+            japandi: {
+              bg: '#FBF9F6',       /* Alabastro cálido / Washi */
+              card: '#FFFFFF',
+              border: '#EBE6DD',   /* Arena suave */
+              text: '#2C2A29',     /* Carbón orgánico */
+              accent: '#8C7A6B',   /* Arcilla / Madera natural */
+              accentHover: '#766558',
+              accentLight: '#F3EFEA',
+              correct: '#4A6B53',  /* Verde Musgo */
+              correctBg: '#EEF4F0',
+              correctBorder: '#D4E4D8',
+              incorrect: '#A65B5B',/* Terracota */
+              incorrectBg: '#FAF0F0',
+              incorrectBorder: '#F0D5D5',
+              warning: '#B88C4B',  /* Ocre */
+              warningBg: '#FCF8F0',
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    body {
+      background-color: #FBF9F6;
+      color: #2C2A29;
+      background-image: radial-gradient(#EBE6DD 1px, transparent 1px);
+      background-size: 24px 24px;
+    }
+    .custom-scrollbar::-webkit-scrollbar {
+      width: 6px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-track {
+      background: #F3EFEA;
+      border-radius: 8px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+      background: #8C7A6B;
+      border-radius: 8px;
+    }
+    textarea:focus {
+      outline: none;
+      border-color: #8C7A6B;
+      box-shadow: 0 0 0 3px rgba(140, 122, 107, 0.15);
+    }
+    /* Estilo para las transiciones */
+    .fade-in {
+      animation: fadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body class="font-sans min-h-screen flex flex-col transition-colors duration-300">
+
+  <!-- NOTIFICACIÓN TOAST PERSONALIZADA -->
+  <div id="toast-container" class="fixed top-6 right-6 z-50 flex flex-col gap-2 pointer-events-none"></div>
+
+  <!-- MODAL DE CONFIRMACIÓN -->
+  <div id="confirm-modal" class="fixed inset-0 bg-black/40 z-50 flex items-center justify-center p-4 hidden opacity-0 transition-opacity duration-300">
+    <div class="bg-japandi-card border border-japandi-border rounded-xl p-6 max-w-md w-full shadow-xl transform scale-95 transition-transform duration-300" id="confirm-modal-box">
+      <h3 class="font-serif text-xl font-bold mb-2 text-japandi-text" id="confirm-title">¿Estás seguro?</h3>
+      <p class="text-japandi-text/70 text-sm mb-6" id="confirm-message">Esta acción no se puede deshacer.</p>
+      <div class="flex justify-end gap-3">
+        <button id="confirm-btn-cancel" class="px-4 py-2 border border-japandi-border text-sm rounded-lg hover:bg-japandi-accentLight transition-colors">Cancelar</button>
+        <button id="confirm-btn-ok" class="px-4 py-2 bg-japandi-accent text-white text-sm rounded-lg hover:bg-japandi-accentHover transition-colors">Confirmar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ENCABEZADO -->
+  <header class="border-b border-japandi-border bg-white/70 backdrop-blur-md sticky top-0 z-30">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <div class="w-9 h-9 rounded-lg bg-japandi-accent flex items-center justify-center text-white shadow-sm">
+          <i data-lucide="headphones" class="w-5 h-5"></i>
+        </div>
+        <div>
+          <h1 class="font-serif text-lg sm:text-xl font-semibold tracking-tight text-japandi-text">Daily Dictation</h1>
+          <p class="text-[10px] sm:text-xs text-japandi-accent font-medium tracking-widest uppercase">Estética Japandi</p>
+        </div>
+      </div>
+      
+      <div class="flex items-center gap-4">
+        <!-- Estadísticas Rápidas -->
+        <div class="hidden md:flex items-center gap-4 text-xs font-medium border-l border-japandi-border pl-4">
+          <div class="text-right">
+            <span class="text-japandi-text/50 block">Completadas</span>
+            <span class="text-japandi-text font-semibold text-sm" id="stat-completed-nav">0/0</span>
+          </div>
+          <div class="text-right border-l border-japandi-border pl-4">
+            <span class="text-japandi-text/50 block">Precisión Media</span>
+            <span class="text-japandi-text font-semibold text-sm" id="stat-accuracy-nav">0%</span>
+          </div>
+        </div>
+        
+        <button id="btn-stats-toggle" class="p-2 border border-japandi-border rounded-lg hover:bg-japandi-accentLight transition-colors relative" title="Ver Estadísticas">
+          <i data-lucide="bar-chart-2" class="w-4 h-4 text-japandi-accent"></i>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- CONTENIDO PRINCIPAL -->
+  <main class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full grid grid-cols-1 lg:grid-cols-12 gap-8">
+    
+    <!-- PANEL DE LECCIONES (IZQUIERDA) -->
+    <section class="lg:col-span-4 flex flex-col gap-6">
+      <div class="bg-white border border-japandi-border rounded-2xl p-5 shadow-sm flex flex-col h-[580px]">
+        <!-- Cabecera de Lecciones -->
+        <div class="mb-4">
+          <div class="flex items-center justify-between mb-3">
+            <h2 class="font-serif text-lg font-semibold text-japandi-text">Lecciones</h2>
+            <span class="text-xs text-japandi-accent bg-japandi-accentLight px-2 py-0.5 rounded-full font-medium" id="lessons-count">0 lecciones</span>
+          </div>
+          
+          <!-- Buscador y Filtros -->
+          <div class="flex flex-col gap-2">
+            <div class="relative">
+              <i data-lucide="search" class="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-japandi-text/40"></i>
+              <input type="text" id="lesson-search" placeholder="Buscar lección..." class="w-full text-xs pl-9 pr-3 py-2 border border-japandi-border rounded-lg focus:outline-none focus:border-japandi-accent focus:ring-2 focus:ring-japandi-accent/10">
+            </div>
+            
+            <div class="flex gap-1 overflow-x-auto pb-1" id="difficulty-filters">
+              <button data-filter="all" class="text-[11px] px-3 py-1 rounded-full bg-japandi-accent text-white font-medium transition-colors cursor-pointer whitespace-nowrap">Todas</button>
+              <button data-filter="Beginner" class="text-[11px] px-3 py-1 rounded-full border border-japandi-border text-japandi-text/70 font-medium hover:bg-japandi-accentLight transition-colors cursor-pointer whitespace-nowrap">Básico</button>
+              <button data-filter="Intermediate" class="text-[11px] px-3 py-1 rounded-full border border-japandi-border text-japandi-text/70 font-medium hover:bg-japandi-accentLight transition-colors cursor-pointer whitespace-nowrap">Intermedio</button>
+              <button data-filter="Advanced" class="text-[11px] px-3 py-1 rounded-full border border-japandi-border text-japandi-text/70 font-medium hover:bg-japandi-accentLight transition-colors cursor-pointer whitespace-nowrap">Avanzado</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Lista de Lecciones con Scroll -->
+        <div class="flex-grow overflow-y-auto custom-scrollbar pr-1" id="lessons-list">
+          <!-- Se inyectan dinámicamente con JS -->
+        </div>
+      </div>
+    </section>
+
+    <!-- ÁREA DE TRABAJO DEL DICTADO (DERECHA) -->
+    <section class="lg:col-span-8 flex flex-col gap-6">
+      
+      <!-- CARD PRINCIPAL DEL JUEGO -->
+      <div class="bg-white border border-japandi-border rounded-2xl p-6 sm:p-8 shadow-sm flex flex-col justify-between min-h-[580px] relative overflow-hidden" id="workspace-container">
+        
+        <!-- Estado de no selección -->
+        <div id="no-lesson-state" class="absolute inset-0 bg-white z-20 flex flex-col items-center justify-center text-center p-6 transition-opacity duration-300">
+          <div class="w-16 h-16 rounded-full bg-japandi-accentLight flex items-center justify-center text-japandi-accent mb-4">
+            <i data-lucide="book-open" class="w-8 h-8"></i>
+          </div>
+          <h3 class="font-serif text-xl font-semibold mb-2">Comienza tu práctica</h3>
+          <p class="text-japandi-text/60 text-sm max-w-sm mb-6">Selecciona una lección del panel lateral para iniciar el dictado en inglés. Puedes elegir entre audios de síntesis inteligente o clips de YouTube reales.</p>
+          <button id="btn-select-first" class="px-5 py-2.5 bg-japandi-accent hover:bg-japandi-accentHover text-white rounded-lg text-sm font-medium transition-colors shadow-sm inline-flex items-center gap-2">
+            Ver Primera Lección <i data-lucide="arrow-right" class="w-4 h-4"></i>
+          </button>
+        </div>
+
+        <!-- Estado de Lección Activa -->
+        <div class="flex flex-col gap-6">
+          <!-- Cabecera de Lección -->
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-japandi-border">
+            <div>
+              <div class="flex items-center gap-2 mb-1">
+                <span id="lesson-type-badge" class="text-[10px] font-semibold uppercase tracking-wider px-2 py-0.5 rounded-md">TTS</span>
+                <span id="lesson-difficulty-badge" class="text-[10px] font-semibold uppercase tracking-wider px-2 py-0.5 rounded-md">Beginner</span>
+              </div>
+              <h2 id="active-lesson-title" class="font-serif text-xl sm:text-2xl font-bold text-japandi-text">Cargando lección...</h2>
+            </div>
+            
+            <!-- Acciones rápidas de Lección -->
+            <div class="flex items-center gap-2">
+              <span id="completion-status-badge" class="hidden text-xs bg-japandi-correctBg text-japandi-correct border border-japandi-correctBorder font-medium px-2.5 py-1 rounded-full items-center gap-1">
+                <i data-lucide="check-circle" class="w-3.5 h-3.5"></i> Completado
+              </span>
+            </div>
+          </div>
+
+          <!-- REPRODUCTOR DE AUDIO / EMBED YOUTUBE -->
+          <div class="bg-japandi-accentLight/50 border border-japandi-border rounded-xl p-4 sm:p-5">
+            <!-- Contenedor ocultable del reproductor de YouTube -->
+            <div id="youtube-player-container" class="hidden mb-4 overflow-hidden rounded-lg aspect-video max-w-sm mx-auto border border-japandi-border shadow-inner">
+              <div id="youtube-player"></div>
+            </div>
+
+            <!-- Interfaz de Control de Audio -->
+            <div class="flex flex-col sm:flex-row items-center gap-4 justify-between">
+              
+              <!-- Botones de Reproducción -->
+              <div class="flex items-center gap-2">
+                <button id="btn-audio-play" class="w-12 h-12 rounded-full bg-japandi-accent text-white hover:bg-japandi-accentHover flex items-center justify-center transition-all shadow-md focus:outline-none" title="Reproducir/Pausar (Atajo: Esc)">
+                  <i data-lucide="play" class="w-5 h-5" id="play-icon"></i>
+                </button>
+                <button id="btn-audio-replay-5" class="p-2 border border-japandi-border rounded-lg bg-white hover:bg-japandi-accentLight transition-colors text-japandi-accent" title="Retroceder 5 segundos">
+                  <i data-lucide="rotate-ccw" class="w-4 h-4"></i>
+                </button>
+                <button id="btn-audio-stop" class="p-2 border border-japandi-border rounded-lg bg-white hover:bg-japandi-accentLight transition-colors text-japandi-accent" title="Detener reproducción">
+                  <i data-lucide="square" class="w-4 h-4"></i>
+                </button>
+              </div>
+
+              <!-- Controles de Configuración de Reproducción -->
+              <div class="flex flex-wrap items-center gap-4 justify-end text-xs text-japandi-text/80 w-full sm:w-auto">
+                
+                <!-- Bucle inteligente -->
+                <label class="flex items-center gap-2 cursor-pointer select-none">
+                  <input type="checkbox" id="chk-audio-loop" class="rounded border-japandi-border text-japandi-accent focus:ring-japandi-accent/30 w-4 h-4">
+                  <span class="font-medium inline-flex items-center gap-1"><i data-lucide="repeat" class="w-3.5 h-3.5"></i> Auto-Bucle</span>
+                </label>
+
+                <!-- Selector de Velocidad (Velocidades) -->
+                <div class="flex items-center gap-2 border-l border-japandi-border pl-4">
+                  <span class="font-medium">Velocidad:</span>
+                  <select id="select-audio-speed" class="bg-white border border-japandi-border rounded px-2 py-1 text-xs focus:outline-none focus:border-japandi-accent">
+                    <option value="0.7">0.7x (Lento)</option>
+                    <option value="0.8">0.8x</option>
+                    <option value="0.9" selected>0.9x (Recomendado)</option>
+                    <option value="1.0">1.0x (Normal)</option>
+                    <option value="1.1">1.1x (Rápido)</option>
+                  </select>
+                </div>
+
+                <!-- Selector de Voces (Solo TTS) -->
+                <div id="tts-voice-wrapper" class="flex items-center gap-2 border-l border-japandi-border pl-4">
+                  <span class="font-medium"><i data-lucide="globe" class="w-3.5 h-3.5 inline"></i> Voz:</span>
+                  <select id="select-tts-voice" class="bg-white border border-japandi-border rounded px-2 py-1 text-xs focus:outline-none focus:border-japandi-accent max-w-[120px]">
+                    <option value="auto">Por defecto</option>
+                  </select>
+                </div>
+
+                <!-- Mostrar Video (Solo YouTube) -->
+                <button id="btn-toggle-video" class="hidden items-center gap-1 text-xs border border-japandi-border bg-white px-2.5 py-1 rounded hover:bg-japandi-accentLight transition-colors">
+                  <i data-lucide="eye" class="w-3.5 h-3.5"></i> <span>Ver Video</span>
+                </button>
+              </div>
+
+            </div>
+          </div>
+
+          <!-- PANEL DE DICTADO Y TEXTAREA -->
+          <div class="flex flex-col gap-2">
+            <div class="flex items-center justify-between text-xs text-japandi-text/60">
+              <label for="dictation-input" class="font-medium">Tu transcripción:</label>
+              <span id="char-word-count">0 caracteres | 0 palabras</span>
+            </div>
+            
+            <textarea id="dictation-input" rows="4" class="w-full border border-japandi-border rounded-xl p-4 text-base leading-relaxed bg-japandi-bg font-mono transition-all resize-none custom-scrollbar" placeholder="Escucha atentamente el fragmento y escribe lo que oyes aquí..."></textarea>
+            
+            <p class="text-[11px] text-japandi-text/40 italic flex items-center gap-1">
+              <i data-lucide="keyboard" class="w-3.5 h-3.5"></i> Atajos: <kbd class="bg-japandi-accentLight px-1 rounded border">Esc</kbd> Reproducir/Pausar • <kbd class="bg-japandi-accentLight px-1 rounded border">Ctrl + Enter</kbd> Verificar
+            </p>
+          </div>
+
+          <!-- BOTONES DE ACCIÓN -->
+          <div class="flex items-center justify-between gap-4 pt-2">
+            <button id="btn-action-clear" class="px-4 py-2 text-xs border border-japandi-border rounded-lg text-japandi-text/70 hover:bg-japandi-accentLight transition-colors font-medium flex items-center gap-1.5 cursor-pointer">
+              <i data-lucide="trash-2" class="w-4 h-4"></i> Limpiar
+            </button>
+            
+            <div class="flex items-center gap-2">
+              <button id="btn-action-hint" class="px-4 py-2 text-xs border border-japandi-accent/30 text-japandi-accent rounded-lg hover:bg-japandi-accentLight transition-colors font-medium flex items-center gap-1.5 cursor-pointer">
+                <i data-lucide="lightbulb" class="w-4 h-4"></i> Pista
+              </button>
+              <button id="btn-action-verify" class="px-6 py-2 bg-japandi-accent text-white rounded-lg hover:bg-japandi-accentHover transition-colors font-medium text-sm flex items-center gap-1.5 shadow-sm cursor-pointer">
+                <i data-lucide="check" class="w-4 h-4"></i> Verificar Dictado
+              </button>
+            </div>
+          </div>
+
+          <!-- PANEL DE FEEDBACK (SÓLO SI ESTÁ VERIFICADO) -->
+          <div id="feedback-panel" class="hidden border-t border-japandi-border pt-6 fade-in">
+            <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-4">
+              <div>
+                <h3 class="font-serif text-lg font-bold">Resultado de la Validación</h3>
+                <p class="text-xs text-japandi-text/60">Haz clic sobre las palabras incorrectas para ver el detalle comparativo.</p>
+              </div>
+              
+              <div class="flex items-center gap-3">
+                <!-- Porcentaje de Acierto -->
+                <div class="bg-japandi-accentLight px-4 py-2 rounded-xl flex items-center gap-2.5">
+                  <span class="text-xs font-medium text-japandi-text/60">Precisión:</span>
+                  <span id="feedback-accuracy-score" class="font-bold text-lg text-japandi-accent">0%</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Caja de Palabras Color-Coded -->
+            <div id="feedback-word-container" class="border border-japandi-border bg-japandi-bg p-5 rounded-xl flex flex-wrap gap-x-2 gap-y-3 font-serif text-lg leading-relaxed max-h-[160px] overflow-y-auto custom-scrollbar">
+              <!-- Renderizado dinámico -->
+            </div>
+
+            <!-- Leyenda Explicativa -->
+            <div class="flex flex-wrap gap-4 mt-3 text-xs justify-end">
+              <div class="flex items-center gap-1.5">
+                <span class="w-3 h-3 rounded-full bg-japandi-correct"></span>
+                <span class="text-japandi-text/60">Correcto</span>
+              </div>
+              <div class="flex items-center gap-1.5">
+                <span class="w-3 h-3 rounded-full bg-japandi-incorrect"></span>
+                <span class="text-japandi-text/60">Incorrecto / Error</span>
+              </div>
+              <div class="flex items-center gap-1.5">
+                <span class="w-3 h-3 rounded-full bg-japandi-warning"></span>
+                <span class="text-japandi-text/60">Omisión</span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+  <!-- PANEL FLOTANTE DE ESTADÍSTICAS DETALLADAS -->
+  <aside id="stats-drawer" class="fixed right-0 top-0 h-full w-full max-w-sm bg-white border-l border-japandi-border shadow-2xl z-40 transform translate-x-full transition-transform duration-300 ease-in-out flex flex-col justify-between">
+    <div class="p-6 overflow-y-auto custom-scrollbar flex-grow">
+      <div class="flex items-center justify-between pb-4 border-b border-japandi-border mb-6">
+        <div class="flex items-center gap-2">
+          <i data-lucide="award" class="w-5 h-5 text-japandi-accent"></i>
+          <h2 class="font-serif text-xl font-bold">Tu Progreso</h2>
+        </div>
+        <button id="btn-stats-close" class="p-1 hover:bg-japandi-accentLight rounded transition-colors">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <!-- Resumen General -->
+      <div class="grid grid-cols-2 gap-4 mb-6">
+        <div class="bg-japandi-bg p-4 rounded-xl text-center border border-japandi-border">
+          <span class="text-[10px] uppercase font-bold text-japandi-text/50 tracking-wider">Completadas</span>
+          <p id="stats-total-completed" class="text-2xl font-serif font-semibold mt-1">0</p>
+        </div>
+        <div class="bg-japandi-bg p-4 rounded-xl text-center border border-japandi-border">
+          <span class="text-[10px] uppercase font-bold text-japandi-text/50 tracking-wider">Precisión Media</span>
+          <p id="stats-avg-accuracy" class="text-2xl font-serif font-semibold mt-1">0%</p>
+        </div>
+      </div>
+
+      <!-- Detalle por dificultad -->
+      <div class="flex flex-col gap-4 mb-6">
+        <h3 class="text-xs font-semibold uppercase text-japandi-text/60 tracking-wider">Aciertos por Nivel</h3>
+        
+        <!-- Básico -->
+        <div>
+          <div class="flex justify-between text-xs mb-1">
+            <span>Básico (Beginner)</span>
+            <span id="stats-level-beginner">0 / 0</span>
+          </div>
+          <div class="w-full bg-japandi-accentLight h-2 rounded-full overflow-hidden">
+            <div id="bar-level-beginner" class="bg-japandi-correct h-full" style="width: 0%"></div>
+          </div>
+        </div>
+
+        <!-- Intermedio -->
+        <div>
+          <div class="flex justify-between text-xs mb-1">
+            <span>Intermedio (Intermediate)</span>
+            <span id="stats-level-intermediate">0 / 0</span>
+          </div>
+          <div class="w-full bg-japandi-accentLight h-2 rounded-full overflow-hidden">
+            <div id="bar-level-intermediate" class="bg-japandi-warning h-full" style="width: 0%"></div>
+          </div>
+        </div>
+
+        <!-- Avanzado -->
+        <div>
+          <div class="flex justify-between text-xs mb-1">
+            <span>Avanzado (Advanced)</span>
+            <span id="stats-level-advanced">0 / 0</span>
+          </div>
+          <div class="w-full bg-japandi-accentLight h-2 rounded-full overflow-hidden">
+            <div id="bar-level-advanced" class="bg-japandi-incorrect h-full" style="width: 0%"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Historial Reciente -->
+      <div>
+        <h3 class="text-xs font-semibold uppercase text-japandi-text/60 tracking-wider mb-3">Historial Reciente</h3>
+        <div id="stats-recent-list" class="flex flex-col gap-2 max-h-[220px] overflow-y-auto custom-scrollbar">
+          <!-- Dinámico -->
+          <p class="text-xs text-japandi-text/40 italic">Aún no hay prácticas registradas.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Acciones del Panel -->
+    <div class="p-6 border-t border-japandi-border bg-japandi-bg flex flex-col gap-2">
+      <button id="btn-stats-reset" class="w-full py-2 border border-japandi-incorrect/30 hover:bg-japandi-incorrectBg text-japandi-incorrect text-xs rounded-lg font-medium transition-colors cursor-pointer">
+        Restaurar todo el progreso
+      </button>
+    </div>
+  </aside>
+
+  <!-- PIE DE PÁGINA -->
+  <footer class="border-t border-japandi-border bg-white py-6 mt-12 text-center text-xs text-japandi-text/50">
+    <div class="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-4">
+      <p>© 2026 Daily Dictation App. Hecho para la excelencia del inglés.</p>
+      <div class="flex gap-4">
+        <a href="#" class="hover:text-japandi-accent transition-colors">Especificaciones</a>
+        <span class="text-japandi-border">|</span>
+        <a href="#" class="hover:text-japandi-accent transition-colors">Privacidad Local (100% Client-Side)</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- CANVAS EFECTO CONFETTI (Para 100% de aciertos) -->
+  <canvas id="confetti-canvas" class="fixed inset-0 pointer-events-none z-50 hidden"></canvas>
+
+  <!-- ==================== CÓDIGO LOGICO (JAVASCRIPT) ==================== -->
+  
+  <!-- Carga de API Iframe de YouTube (Requerido para control exacto del reproductor) -->
+  <script src="https://www.youtube.com/iframe_api"></script>
+
+  <script>
+    // --- 1. MODELO Y BANCO DE DATOS DE LECCIONES ---
+    const LESSONS_DATABASE = [
+      {
+        id: "tts-01-morning",
+        title: "Daily Morning Habits",
+        type: "TTS",
+        text: "Every morning, I wake up at six o'clock, drink a glass of warm water, and stretch for ten minutes before making breakfast.",
+        difficulty: "Beginner"
+      },
+      {
+        id: "tts-02-climate",
+        title: "Weather Forecast Update",
+        type: "TTS",
+        text: "The weather forecast suggests heavy rain with a high chance of unexpected thunderstorms and cold winds by early evening.",
+        difficulty: "Intermediate"
+      },
+      {
+        id: "tts-03-philosophy",
+        title: "The Nature of Time",
+        type: "TTS",
+        text: "Time is a subjective phenomenon, stretching endlessly during moments of boredom, yet vanishing when we are deeply engaged.",
+        difficulty: "Advanced"
+      },
+      {
+        id: "yt-01-jobs",
+        title: "Steve Jobs - Stanford Speech Clip",
+        type: "YOUTUBE",
+        text: "Your time is limited, so don't waste it living someone else's life.",
+        difficulty: "Beginner",
+        videoId: "UF8uR6Z6KLc",
+        startTime: 40,
+        endTime: 45
+      },
+      {
+        id: "yt-02-gaiman",
+        title: "Neil Gaiman on Making Mistakes",
+        type: "YOUTUBE",
+        text: "I hope that in this coming year, you make mistakes. Because if you are making mistakes, you are making new things.",
+        difficulty: "Intermediate",
+        videoId: "g2bM-eS3pYI",
+        startTime: 12,
+        endTime: 21
+      },
+      {
+        id: "yt-03-sagan",
+        title: "Carl Sagan - Pale Blue Dot",
+        type: "YOUTUBE",
+        text: "Look again at that dot. That's here. That's home. That's us. On it everyone you love lived out their lives.",
+        difficulty: "Advanced",
+        videoId: "GO5FwsblpT8",
+        startTime: 15,
+        endTime: 27
+      }
+    ];
+
+    // --- 2. SERVICIO DE PERSISTENCIA (StorageService) ---
+    const STORAGE_KEY = 'superpowers_dictation_progress';
+    const StorageService = {
+      getProgress() {
+        const data = localStorage.getItem(STORAGE_KEY);
+        return data ? JSON.parse(data) : {};
+      },
+      saveLessonProgress(lessonId, score, completed = true) {
+        const progress = this.getProgress();
+        // Guardar solo si es mayor o igual a la puntuación previa
+        const prevScore = progress[lessonId] ? progress[lessonId].score : 0;
+        if (score >= prevScore) {
+          progress[lessonId] = {
+            completed: completed || (score === 100),
+            score: score,
+            updatedAt: new Date().toISOString()
+          };
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(progress));
+        }
+      },
+      clearAll() {
+        localStorage.removeItem(STORAGE_KEY);
+      }
+    };
+
+    // --- 3. SERVICIO DE VALIDACIÓN (DiffService) ---
+    const DiffService = {
+      cleanWord(word) {
+        // Convierte a minúsculas y elimina signos de puntuación comunes para una comparación lingüística pura
+        return word.toLowerCase().replace(/[.,\/#!$%\^&\*;:{}=\-_`~()?"'¡¿“”’]/g, "").trim();
+      },
+
+      /**
+       * Calcula la diferencia detallada palabra por palabra usando un algoritmo similar a Levenshtein.
+       * Retorna una lista de operaciones que reconstruye el texto esperado basándose en lo digitado.
+       */
+      computeWordDiff(expectedArr, actualArr) {
+        const n = expectedArr.length;
+        const m = actualArr.length;
+        const dp = Array.from({ length: n + 1 }, () => Array(m + 1).fill(0));
+
+        for (let i = 0; i <= n; i++) dp[i][0] = i;
+        for (let j = 0; j <= m; j++) dp[0][j] = j;
+
+        for (let i = 1; i <= n; i++) {
+          for (let j = 1; j <= m; j++) {
+            const w1 = this.cleanWord(expectedArr[i - 1]);
+            const w2 = this.cleanWord(actualArr[j - 1]);
+            if (w1 === w2) {
+              dp[i][j] = dp[i - 1][j - 1];
+            } else {
+              dp[i][j] = Math.min(
+                dp[i - 1][j] + 1,    // Eliminación / Missing
+                dp[i][j - 1] + 1,    // Inserción / Extra
+                dp[i - 1][j - 1] + 1 // Sustitución / Incorrecto
+              );
+            }
+          }
+        }
+
+        // Backtracking para obtener el mapeo de operaciones
+        let i = n, j = m;
+        const ops = [];
+        while (i > 0 || j > 0) {
+          const w1 = i > 0 ? this.cleanWord(expectedArr[i - 1]) : null;
+          const w2 = j > 0 ? this.cleanWord(actualArr[j - 1]) : null;
+
+          if (i > 0 && j > 0 && w1 === w2) {
+            ops.unshift({
+              type: 'correct',
+              expected: expectedArr[i - 1],
+              actual: actualArr[j - 1]
+            });
+            i--;
+            j--;
+          } else {
+            const deleteCost = i > 0 ? dp[i - 1][j] : Infinity;
+            const insertCost = j > 0 ? dp[i][j - 1] : Infinity;
+            const subCost = (i > 0 && j > 0) ? dp[i - 1][j - 1] : Infinity;
+
+            const minCost = Math.min(deleteCost, insertCost, subCost);
+            if (minCost === subCost) {
+              ops.unshift({
+                type: 'incorrect',
+                expected: expectedArr[i - 1],
+                actual: actualArr[j - 1]
+              });
+              i--;
+              j--;
+            } else if (minCost === deleteCost) {
+              ops.unshift({
+                type: 'missing',
+                expected: expectedArr[i - 1],
+                actual: null
+              });
+              i--;
+            } else {
+              ops.unshift({
+                type: 'extra',
+                expected: null,
+                actual: actualArr[j - 1]
+              });
+              j--;
+            }
+          }
+        }
+        return ops;
+      }
+    };
+
+    // --- 4. SERVICIO DE AUDIO (AudioService) ---
+    let ytPlayer = null;
+    let ytLoopInterval = null;
+    let isYoutubeApiReady = false;
+
+    // Callback obligatorio de la API de YouTube
+    function onYouTubeIframeAPIReady() {
+      isYoutubeApiReady = true;
+    }
+
+    const AudioService = {
+      type: 'TTS', // 'TTS' o 'YOUTUBE'
+      activeLesson: null,
+      isPlaying: false,
+      speed: 0.9,
+      loop: false,
+      ttsVoice: null,
+
+      init(lesson, speed, loop, voice) {
+        this.stop();
+        this.activeLesson = lesson;
+        this.type = lesson.type;
+        this.speed = speed;
+        this.loop = loop;
+        this.ttsVoice = voice;
+
+        if (this.type === 'YOUTUBE') {
+          this.initYoutube();
+        }
+      },
+
+      initYoutube() {
+        const container = document.getElementById('youtube-player-container');
+        container.classList.remove('hidden');
+
+        // Si ya hay un player de YouTube, simplemente lo cargamos con el nuevo ID
+        if (ytPlayer && typeof ytPlayer.loadVideoById === 'function') {
+          try {
+            ytPlayer.cueVideoById({
+              videoId: this.activeLesson.videoId,
+              startSeconds: this.activeLesson.startTime,
+              endSeconds: this.activeLesson.endTime
+            });
+            ytPlayer.setPlaybackRate(parseFloat(this.speed));
+          } catch (e) {
+            console.error("Error al recargar video de YouTube:", e);
+          }
+          return;
+        }
+
+        // Crear instancia del reproductor
+        if (isYoutubeApiReady) {
+          try {
+            ytPlayer = new YT.Player('youtube-player', {
+              height: '100%',
+              width: '100%',
+              videoId: this.activeLesson.videoId,
+              playerVars: {
+                playsinline: 1,
+                controls: 0,
+                disablekb: 1,
+                fs: 0,
+                modestbranding: 1,
+                rel: 0,
+                enablejsapi: 1,
+                origin: window.location.origin
+              },
+              events: {
+                'onReady': (event) => {
+                  event.target.setPlaybackRate(parseFloat(this.speed));
+                  // Silenciar inicialmente para evitar sorpresas o reproducir en bucle manual
+                },
+                'onStateChange': (event) => {
+                  if (event.data === YT.PlayerState.ENDED && this.loop) {
+                    this.play();
+                  }
+                },
+                'onError': (event) => {
+                  console.warn('YouTube API Error:', event.data);
+                  if (window.showToast) {
+                    window.showToast('El video no permite reproducción externa (Error ' + event.data + ').', 'incorrect');
+                  }
+                }
+              }
+            });
+          } catch (err) {
+            console.error("Error al inicializar YT.Player:", err);
+          }
+        }
+      },
+
+      play() {
+        if (!this.activeLesson) return;
+        this.isPlaying = true;
+
+        if (this.type === 'TTS') {
+          window.speechSynthesis.cancel();
+          const utterance = new SpeechSynthesisUtterance(this.activeLesson.text);
+          utterance.lang = 'en-US';
+          utterance.rate = parseFloat(this.speed);
+          
+          if (this.ttsVoice && this.ttsVoice !== 'auto') {
+            const voices = window.speechSynthesis.getVoices();
+            const selected = voices.find(v => v.voiceURI === this.ttsVoice);
+            if (selected) utterance.voice = selected;
+          }
+
+          utterance.onend = () => {
+            this.isPlaying = false;
+            document.dispatchEvent(new CustomEvent('audioStateChanged', { detail: { isPlaying: false } }));
+            if (this.loop) {
+              setTimeout(() => this.play(), 800);
+            }
+          };
+
+          utterance.onerror = () => {
+            this.isPlaying = false;
+            document.dispatchEvent(new CustomEvent('audioStateChanged', { detail: { isPlaying: false } }));
+          };
+
+          window.speechSynthesis.speak(utterance);
+          document.dispatchEvent(new CustomEvent('audioStateChanged', { detail: { isPlaying: true } }));
+
+        } else if (this.type === 'YOUTUBE' && ytPlayer && typeof ytPlayer.seekTo === 'function') {
+          clearInterval(ytLoopInterval);
+          
+          // Ajustar velocidad
+          ytPlayer.setPlaybackRate(parseFloat(this.speed));
+          // Buscar segundo inicial
+          ytPlayer.seekTo(this.activeLesson.startTime, true);
+          ytPlayer.playVideo();
+          document.dispatchEvent(new CustomEvent('audioStateChanged', { detail: { isPlaying: true } }));
+
+          // Intervalo de ciclo para controlar el tiempo final exacto
+          ytLoopInterval = setInterval(() => {
+            try {
+              const current = ytPlayer.getCurrentTime();
+              if (current >= this.activeLesson.endTime) {
+                if (this.loop) {
+                  ytPlayer.seekTo(this.activeLesson.startTime, true);
+                } else {
+                  this.stop();
+                }
+              }
+            } catch (e) {
+              clearInterval(ytLoopInterval);
+            }
+          }, 100);
+        }
+      },
+
+      stop() {
+        this.isPlaying = false;
+        clearInterval(ytLoopInterval);
+        document.dispatchEvent(new CustomEvent('audioStateChanged', { detail: { isPlaying: false } }));
+
+        if (this.type === 'TTS') {
+          window.speechSynthesis.cancel();
+        } else if (this.type === 'YOUTUBE' && ytPlayer && typeof ytPlayer.pauseVideo === 'function') {
+          try {
+            ytPlayer.pauseVideo();
+          } catch (e) {
+            console.warn(e);
+          }
+        }
+      },
+
+      replay5() {
+        if (this.type === 'TTS') {
+          // TTS no se puede retroceder de forma nativa por segmentos fácilmente, se repite desde el inicio
+          this.play();
+        } else if (this.type === 'YOUTUBE' && ytPlayer && typeof ytPlayer.getCurrentTime === 'function') {
+          const current = ytPlayer.getCurrentTime();
+          const target = Math.max(this.activeLesson.startTime, current - 5);
+          ytPlayer.seekTo(target, true);
+          if (!this.isPlaying) {
+            this.play();
+          }
+        }
+      },
+
+      setSpeed(newSpeed) {
+        this.speed = newSpeed;
+        if (this.isPlaying) {
+          // Reiniciar para aplicar velocidad o aplicar dinámicamente si es YT
+          if (this.type === 'YOUTUBE' && ytPlayer && typeof ytPlayer.setPlaybackRate === 'function') {
+            ytPlayer.setPlaybackRate(parseFloat(newSpeed));
+          } else {
+            this.play();
+          }
+        }
+      },
+
+      setLoop(val) {
+        this.loop = val;
+      }
+    };
+
+    // --- 5. ORQUESTADOR CENTRAL DE LA APLICACIÓN (app.js) ---
+    document.addEventListener('DOMContentLoaded', () => {
+      
+      // Estado Interno
+      let activeLesson = null;
+      let activeFilter = 'all';
+      let searchQuery = '';
+      
+      // Selectores DOM
+      const lessonsListContainer = document.getElementById('lessons-list');
+      const lessonSearchInput = document.getElementById('lesson-search');
+      const difficultyFiltersContainer = document.getElementById('difficulty-filters');
+      const workspaceContainer = document.getElementById('workspace-container');
+      const noLessonState = document.getElementById('no-lesson-state');
+      const activeLessonTitle = document.getElementById('active-lesson-title');
+      const lessonTypeBadge = document.getElementById('lesson-type-badge');
+      const lessonDifficultyBadge = document.getElementById('lesson-difficulty-badge');
+      const completionStatusBadge = document.getElementById('completion-status-badge');
+      const lessonsCountBadge = document.getElementById('lessons-count');
+      const selectTtsVoice = document.getElementById('select-tts-voice');
+      const ttsVoiceWrapper = document.getElementById('tts-voice-wrapper');
+      
+      // Controles Audio
+      const btnAudioPlay = document.getElementById('btn-audio-play');
+      const btnAudioReplay5 = document.getElementById('btn-audio-replay-5');
+      const btnAudioStop = document.getElementById('btn-audio-stop');
+      const selectAudioSpeed = document.getElementById('select-audio-speed');
+      const chkAudioLoop = document.getElementById('chk-audio-loop');
+      const btnToggleVideo = document.getElementById('btn-toggle-video');
+      const youtubePlayerContainer = document.getElementById('youtube-player-container');
+      const playIcon = document.getElementById('play-icon');
+
+      // Acciones Dictado
+      const dictationInput = document.getElementById('dictation-input');
+      const charWordCount = document.getElementById('char-word-count');
+      const btnActionClear = document.getElementById('btn-action-clear');
+      const btnActionHint = document.getElementById('btn-action-hint');
+      const btnActionVerify = document.getElementById('btn-action-verify');
+
+      // Feedback
+      const feedbackPanel = document.getElementById('feedback-panel');
+      const feedbackAccuracyScore = document.getElementById('feedback-accuracy-score');
+      const feedbackWordContainer = document.getElementById('feedback-word-container');
+
+      // Stats Drawer
+      const btnStatsToggle = document.getElementById('btn-stats-toggle');
+      const btnStatsClose = document.getElementById('btn-stats-close');
+      const statsDrawer = document.getElementById('stats-drawer');
+      const btnStatsReset = document.getElementById('btn-stats-reset');
+      
+      // Elementos Navbar y Panel de Estadísticas
+      const statCompletedNav = document.getElementById('stat-completed-nav');
+      const statAccuracyNav = document.getElementById('stat-accuracy-nav');
+      const statsTotalCompleted = document.getElementById('stats-total-completed');
+      const statsAvgAccuracy = document.getElementById('stats-avg-accuracy');
+      const statsLevelBeginner = document.getElementById('stats-level-beginner');
+      const statsLevelIntermediate = document.getElementById('stats-level-intermediate');
+      const statsLevelAdvanced = document.getElementById('stats-level-advanced');
+      const barLevelBeginner = document.getElementById('bar-level-beginner');
+      const barLevelIntermediate = document.getElementById('bar-level-intermediate');
+      const barLevelAdvanced = document.getElementById('bar-level-advanced');
+      const statsRecentList = document.getElementById('stats-recent-list');
+
+      // Confirm Modal
+      const confirmModal = document.getElementById('confirm-modal');
+      const confirmModalBox = document.getElementById('confirm-modal-box');
+      const confirmTitle = document.getElementById('confirm-title');
+      const confirmMessage = document.getElementById('confirm-message');
+      const confirmBtnCancel = document.getElementById('confirm-btn-cancel');
+      const confirmBtnOk = document.getElementById('confirm-btn-ok');
+      let confirmCallback = null;
+
+      // Confetti Canvas
+      const confettiCanvas = document.getElementById('confetti-canvas');
+
+      // --- INICIALIZACIÓN ---
+      initApp();
+
+      function initApp() {
+        populateTtsVoices();
+        if (typeof window.speechSynthesis !== 'undefined') {
+          window.speechSynthesis.onvoiceschanged = populateTtsVoices;
+        }
+        
+        renderLessons();
+        updateGlobalStats();
+        setupEventListeners();
+        lucide.createIcons();
+      }
+
+      // Llenar selector de voces TTS disponibles en el sistema
+      function populateTtsVoices() {
+        if (typeof window.speechSynthesis === 'undefined') return;
+        const voices = window.speechSynthesis.getVoices();
+        // Filtrar voces exclusivas de inglés
+        const englishVoices = voices.filter(v => v.lang.startsWith('en'));
+        
+        selectTtsVoice.innerHTML = '<option value="auto">Por defecto (Sistema)</option>';
+        englishVoices.forEach(voice => {
+          const option = document.createElement('option');
+          option.value = voice.voiceURI;
+          option.textContent = `${voice.name} (${voice.lang})`;
+          selectTtsVoice.appendChild(option);
+        });
+      }
+
+      // --- RENDERIZADO DE LECCIONES LATERALES ---
+      function renderLessons() {
+        lessonsListContainer.innerHTML = '';
+        const progress = StorageService.getProgress();
+
+        const filtered = LESSONS_DATABASE.filter(lesson => {
+          const matchesSearch = lesson.title.toLowerCase().includes(searchQuery.toLowerCase()) || 
+                                lesson.text.toLowerCase().includes(searchQuery.toLowerCase());
+          const matchesDifficulty = activeFilter === 'all' || lesson.difficulty === activeFilter;
+          return matchesSearch && matchesDifficulty;
+        });
+
+        lessonsCountBadge.textContent = `${filtered.length} lecciones`;
+
+        if (filtered.length === 0) {
+          lessonsListContainer.innerHTML = `
+            <div class="text-center py-8 text-japandi-text/40">
+              <i data-lucide="info" class="w-8 h-8 mx-auto mb-2 opacity-50"></i>
+              <p class="text-xs">No se encontraron lecciones.</p>
+            </div>
+          `;
+          lucide.createIcons();
+          return;
+        }
+
+        filtered.forEach(lesson => {
+          const isCompleted = progress[lesson.id]?.completed;
+          const score = progress[lesson.id]?.score || 0;
+          
+          const activeClass = activeLesson && activeLesson.id === lesson.id 
+            ? 'border-japandi-accent bg-japandi-accentLight/60' 
+            : 'border-japandi-border hover:bg-japandi-accentLight/30';
+
+          const difficultyColors = {
+            'Beginner': 'text-japandi-correct bg-japandi-correctBg border-japandi-correctBorder',
+            'Intermediate': 'text-japandi-warning bg-japandi-warningBg border-japandi-border',
+            'Advanced': 'text-japandi-incorrect bg-japandi-incorrectBg border-japandi-incorrectBorder'
+          };
+
+          const card = document.createElement('div');
+          card.className = `border rounded-xl p-4 cursor-pointer transition-all ${activeClass} mb-3 flex flex-col justify-between gap-3`;
+          card.innerHTML = `
+            <div class="flex items-start justify-between gap-2">
+              <h3 class="font-medium text-sm text-japandi-text leading-snug line-clamp-1">${lesson.title}</h3>
+              ${isCompleted 
+                ? `<span class="text-japandi-correct flex-shrink-0" title="Completado al ${score}%"><i data-lucide="check-circle-2" class="w-4 h-4 fill-japandi-correct/10"></i></span>` 
+                : ''
+              }
+            </div>
+            
+            <p class="text-xs text-japandi-text/50 line-clamp-2 italic">"${lesson.text}"</p>
+
+            <div class="flex items-center justify-between mt-1 pt-2 border-t border-japandi-border/40">
+              <div class="flex items-center gap-1.5">
+                <span class="text-[9px] font-bold tracking-widest uppercase text-japandi-text/40">${lesson.type}</span>
+                <span class="text-[9px] font-semibold border px-1.5 py-0.5 rounded ${difficultyColors[lesson.difficulty]}">${lesson.difficulty}</span>
+              </div>
+              ${score > 0 ? `<span class="text-[10px] font-semibold text-japandi-accent">${score}% prec.</span>` : ''}
+            </div>
+          `;
+
+          card.addEventListener('click', () => selectLesson(lesson));
+          lessonsListContainer.appendChild(card);
+        });
+
+        lucide.createIcons();
+      }
+
+      // --- SELECCIONAR LECCIÓN ---
+      function selectLesson(lesson) {
+        AudioService.stop();
+        activeLesson = lesson;
+        
+        // Quitar estado vacío si es la primera vez
+        noLessonState.classList.add('opacity-0');
+        setTimeout(() => noLessonState.classList.add('hidden'), 300);
+
+        // Actualizar UI activa
+        activeLessonTitle.textContent = lesson.title;
+        lessonTypeBadge.textContent = lesson.type;
+        lessonDifficultyBadge.textContent = lesson.difficulty;
+        
+        // Badge de dificultad estilización
+        const badgeClasses = {
+          'Beginner': 'bg-japandi-correctBg text-japandi-correct border border-japandi-correctBorder',
+          'Intermediate': 'bg-japandi-warningBg text-japandi-warning border border-japandi-border',
+          'Advanced': 'bg-japandi-incorrectBg text-japandi-incorrect border border-japandi-incorrectBorder'
+        };
+        lessonDifficultyBadge.className = `text-[10px] font-semibold uppercase tracking-wider px-2 py-0.5 rounded-md ${badgeClasses[lesson.difficulty]}`;
+
+        // Badge de tipo estilización
+        lessonTypeBadge.className = `text-[10px] font-semibold uppercase tracking-wider px-2 py-0.5 rounded-md ${
+          lesson.type === 'TTS' ? 'bg-japandi-accent text-white' : 'bg-[#E11D48] text-white'
+        }`;
+
+        // Limpiar área de trabajo previa
+        dictationInput.value = '';
+        charWordCount.textContent = '0 caracteres | 0 palabras';
+        feedbackPanel.classList.add('hidden');
+        youtubePlayerContainer.classList.add('hidden');
+
+        // Mostrar u ocultar controles específicos
+        if (lesson.type === 'TTS') {
+          ttsVoiceWrapper.classList.remove('hidden');
+          btnToggleVideo.classList.add('hidden');
+        } else {
+          ttsVoiceWrapper.classList.add('hidden');
+          btnToggleVideo.classList.remove('hidden');
+          btnToggleVideo.querySelector('span').textContent = "Ver Video";
+        }
+
+        // Marcar completado si ya tiene registro
+        const progress = StorageService.getProgress();
+        if (progress[lesson.id]?.completed) {
+          completionStatusBadge.classList.remove('hidden');
+          completionStatusBadge.classList.add('inline-flex');
+          dictationInput.value = progress[lesson.id].userAttempt || ''; // Opcional, si guardamos texto
+        } else {
+          completionStatusBadge.classList.add('hidden');
+          completionStatusBadge.classList.remove('inline-flex');
+        }
+
+        // Inicializar AudioService
+        AudioService.init(
+          lesson, 
+          selectAudioSpeed.value, 
+          chkAudioLoop.checked, 
+          selectTtsVoice.value
+        );
+
+        // Refrescar listado para marcar activo visualmente
+        renderLessons();
+        showToast(`Lección "${lesson.title}" cargada`, 'info');
+      }
+
+      // --- CONFIGURAR ESCUCHADORES DE EVENTOS ---
+      function setupEventListeners() {
+        // Buscador y filtros
+        lessonSearchInput.addEventListener('input', (e) => {
+          searchQuery = e.target.value;
+          renderLessons();
+        });
+
+        difficultyFiltersContainer.addEventListener('click', (e) => {
+          const target = e.target.closest('button');
+          if (!target) return;
+          
+          difficultyFiltersContainer.querySelectorAll('button').forEach(btn => {
+            btn.className = 'text-[11px] px-3 py-1 rounded-full border border-japandi-border text-japandi-text/70 font-medium hover:bg-japandi-accentLight transition-colors cursor-pointer whitespace-nowrap';
+          });
+
+          target.className = 'text-[11px] px-3 py-1 rounded-full bg-japandi-accent text-white font-medium transition-colors cursor-pointer whitespace-nowrap';
+          activeFilter = target.getAttribute('data-filter');
+          renderLessons();
+        });
+
+        document.getElementById('btn-select-first').addEventListener('click', () => {
+          if (LESSONS_DATABASE.length > 0) {
+            selectLesson(LESSONS_DATABASE[0]);
+          }
+        });
+
+        // Controles de Reproducción de Audio
+        btnAudioPlay.addEventListener('click', () => {
+          if (AudioService.isPlaying) {
+            AudioService.stop();
+          } else {
+            AudioService.play();
+          }
+        });
+
+        btnAudioStop.addEventListener('click', () => {
+          AudioService.stop();
+        });
+
+        btnAudioReplay5.addEventListener('click', () => {
+          AudioService.replay5();
+        });
+
+        selectAudioSpeed.addEventListener('change', (e) => {
+          AudioService.setSpeed(parseFloat(e.target.value));
+        });
+
+        chkAudioLoop.addEventListener('change', (e) => {
+          AudioService.setLoop(e.target.checked);
+        });
+
+        selectTtsVoice.addEventListener('change', (e) => {
+          AudioService.ttsVoice = e.target.value;
+        });
+
+        btnToggleVideo.addEventListener('click', () => {
+          const isHidden = youtubePlayerContainer.classList.contains('hidden');
+          if (isHidden) {
+            youtubePlayerContainer.classList.remove('hidden');
+            btnToggleVideo.querySelector('span').textContent = "Ocultar Video";
+          } else {
+            youtubePlayerContainer.classList.add('hidden');
+            btnToggleVideo.querySelector('span').textContent = "Ver Video";
+          }
+        });
+
+        // Evento personalizado de sincronización del icono del player
+        document.addEventListener('audioStateChanged', (e) => {
+          const playing = e.detail.isPlaying;
+          if (playing) {
+            playIcon.setAttribute('data-lucide', 'pause');
+            btnAudioPlay.classList.add('scale-105', 'bg-japandi-accentHover');
+          } else {
+            playIcon.setAttribute('data-lucide', 'play');
+            btnAudioPlay.classList.remove('scale-105', 'bg-japandi-accentHover');
+          }
+          lucide.createIcons();
+        });
+
+        // Campo de entrada transacciones
+        dictationInput.addEventListener('input', (e) => {
+          const val = e.target.value;
+          const charCount = val.length;
+          const wordCount = val.trim() === '' ? 0 : val.trim().split(/\s+/).length;
+          charWordCount.textContent = `${charCount} caracteres | ${wordCount} palabras`;
+        });
+
+        // Atajos de Teclado
+        document.addEventListener('keydown', (e) => {
+          // Desactivar atajo global si está en inputs que no sean el dictation
+          if (e.key === 'Escape' && activeLesson) {
+            e.preventDefault();
+            btnAudioPlay.click();
+          }
+          if (e.key === 'Enter' && e.ctrlKey && activeLesson) {
+            e.preventDefault();
+            btnActionVerify.click();
+          }
+        });
+
+        // Limpiar área de trabajo
+        btnActionClear.addEventListener('click', () => {
+          showConfirm(
+            "¿Deseas vaciar tu texto?", 
+            "Esto borrará todo lo que has transcrito en esta lección.",
+            () => {
+              dictationInput.value = '';
+              charWordCount.textContent = '0 caracteres | 0 palabras';
+              feedbackPanel.classList.add('hidden');
+              showToast("Texto limpiado", "info");
+            }
+          );
+        });
+
+        // Botón de Pista (Hint)
+        btnActionHint.addEventListener('click', () => {
+          if (!activeLesson) return;
+          const words = activeLesson.text.split(/\s+/);
+          const randIndex = Math.floor(Math.random() * words.length);
+          const hintWord = words[randIndex].replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g, "");
+          showToast(`Pista (Palabra contenida): "${hintWord}"`, 'warning');
+        });
+
+        // BOTÓN DE VERIFICACIÓN (NÚCLEO DEL DICTADO)
+        btnActionVerify.addEventListener('click', () => {
+          verifyDictation();
+        });
+
+        // Panel de Estadísticas Drawer
+        btnStatsToggle.addEventListener('click', () => {
+          statsDrawer.classList.remove('translate-x-full');
+          updateGlobalStats();
+        });
+
+        btnStatsClose.addEventListener('click', () => {
+          statsDrawer.classList.add('translate-x-full');
+        });
+
+        btnStatsReset.addEventListener('click', () => {
+          showConfirm(
+            "¿Reiniciar todo el progreso?",
+            "Esta acción borrará definitivamente todas tus estadísticas y lecciones completadas.",
+            () => {
+              StorageService.clearAll();
+              updateGlobalStats();
+              renderLessons();
+              if (activeLesson) {
+                completionStatusBadge.classList.add('hidden');
+              }
+              statsDrawer.classList.add('translate-x-full');
+              showToast("Progreso reestablecido con éxito", "success");
+            }
+          );
+        });
+
+        // Botones confirmación modal
+        confirmBtnCancel.addEventListener('click', () => {
+          closeConfirm(false);
+        });
+        confirmBtnOk.addEventListener('click', () => {
+          closeConfirm(true);
+        });
+      }
+
+      // --- MÉTODOS DE LOGICA DE NEGOCIO ---
+
+      // Acción de Verificación
+      function verifyDictation() {
+        if (!activeLesson) return;
+        
+        const userText = dictationInput.value.trim();
+        if (userText === '') {
+          showToast("Escribe algo antes de verificar tu respuesta.", "warning");
+          return;
+        }
+
+        AudioService.stop();
+
+        const expectedWords = activeLesson.text.trim().split(/\s+/);
+        const actualWords = userText.split(/\s+/);
+
+        // Ejecutar algoritmo Levenshtein palabra por palabra
+        const diffResults = DiffService.computeWordDiff(expectedWords, actualWords);
+
+        // Calcular porcentaje de acierto
+        const totalExpected = expectedWords.length;
+        const correctCount = diffResults.filter(r => r.type === 'correct').length;
+        
+        // Puntuación de precisión
+        const accuracyScore = Math.round((correctCount / totalExpected) * 100);
+
+        // Guardar progreso localmente
+        const completed = accuracyScore >= 90; // Completado con 90% o más
+        StorageService.saveLessonProgress(activeLesson.id, accuracyScore, completed);
+
+        // Renderizar Feedback Visual
+        renderFeedbackVisuals(diffResults, accuracyScore);
+
+        // Actualizar estadísticas rápidas
+        updateGlobalStats();
+        renderLessons();
+
+        // Mostrar Badge de estado activo
+        if (completed) {
+          completionStatusBadge.classList.remove('hidden');
+          completionStatusBadge.classList.add('inline-flex');
+        }
+
+        // Efecto especial si logra puntuación perfecta 100%
+        if (accuracyScore === 100) {
+          showToast("¡Impecable! 100% de precisión alcanzada.", "success");
+          triggerConfetti();
+        } else if (accuracyScore >= 80) {
+          showToast(`¡Buen trabajo! Precisión del ${accuracyScore}%`, "success");
+        } else {
+          showToast(`Verificación lista. Precisión: ${accuracyScore}%`, "info");
+        }
+      }
+
+      // Render de las palabras coloreadas del Diff
+      function renderFeedbackVisuals(diffResults, accuracyScore) {
+        feedbackPanel.classList.remove('hidden');
+        feedbackAccuracyScore.textContent = `${accuracyScore}%`;
+
+        // Modificar clases del contenedor según precisión
+        if (accuracyScore >= 90) {
+          feedbackAccuracyScore.className = "font-bold text-lg text-japandi-correct";
+        } else if (accuracyScore >= 60) {
+          feedbackAccuracyScore.className = "font-bold text-lg text-japandi-warning";
+        } else {
+          feedbackAccuracyScore.className = "font-bold text-lg text-japandi-incorrect";
+        }
+
+        feedbackWordContainer.innerHTML = '';
+
+        diffResults.forEach(item => {
+          const span = document.createElement('span');
+          span.className = 'px-1.5 py-0.5 rounded cursor-pointer select-none transition-transform hover:scale-105 inline-block';
+          
+          if (item.type === 'correct') {
+            span.classList.add('bg-japandi-correctBg', 'text-japandi-correct', 'border', 'border-japandi-correctBorder');
+            span.textContent = item.expected;
+            span.title = "Acierto perfecto";
+          } else if (item.type === 'incorrect') {
+            span.classList.add('bg-japandi-incorrectBg', 'text-japandi-incorrect', 'border', 'border-japandi-incorrectBorder', 'line-through');
+            span.textContent = item.expected;
+            span.title = `Escribiste: "${item.actual || 'N/A'}" • Esperado: "${item.expected}"`;
+            
+            // Añadir click para ver detalle en un tooltip personalizado rápido o toast
+            span.addEventListener('click', () => {
+              showToast(`Error: Esperabas "${item.expected}" pero escribiste "${item.actual || 'vacío'}"`, 'incorrect');
+            });
+          } else if (item.type === 'missing') {
+            span.classList.add('bg-japandi-warningBg', 'text-japandi-warning', 'border', 'border-japandi-border', 'opacity-85');
+            span.textContent = `[${item.expected}]`;
+            span.title = `Omitiste esta palabra: "${item.expected}"`;
+            
+            span.addEventListener('click', () => {
+              showToast(`Palabra omitida: "${item.expected}"`, 'warning');
+            });
+          } else if (item.type === 'extra') {
+            span.classList.add('bg-neutral-100', 'text-neutral-500', 'border', 'border-neutral-300', 'line-through', 'opacity-70');
+            span.textContent = item.actual;
+            span.title = `Palabra extra innecesaria: "${item.actual}"`;
+            
+            span.addEventListener('click', () => {
+              showToast(`Añadiste la palabra innecesaria: "${item.actual}"`, 'info');
+            });
+          }
+
+          feedbackWordContainer.appendChild(span);
+        });
+      }
+
+      // --- RENDERIZADO DE ESTADÍSTICAS GLOBALES ---
+      function updateGlobalStats() {
+        const progress = StorageService.getProgress();
+        const totalLessons = LESSONS_DATABASE.length;
+        
+        let completedCount = 0;
+        let accumAccuracy = 0;
+        let levels = {
+          'Beginner': { total: 0, completed: 0 },
+          'Intermediate': { total: 0, completed: 0 },
+          'Advanced': { total: 0, completed: 0 }
+        };
+
+        LESSONS_DATABASE.forEach(lesson => {
+          levels[lesson.difficulty].total++;
+          const rec = progress[lesson.id];
+          if (rec) {
+            accumAccuracy += rec.score;
+            if (rec.completed) {
+              completedCount++;
+              levels[lesson.difficulty].completed++;
+            }
+          }
+        });
+
+        const avgAccuracy = completedCount > 0 ? Math.round(accumAccuracy / Object.keys(progress).length) : 0;
+
+        // Actualizar Navbar
+        statCompletedNav.textContent = `${completedCount}/${totalLessons}`;
+        statAccuracyNav.textContent = `${avgAccuracy}%`;
+
+        // Actualizar Drawer
+        statsTotalCompleted.textContent = completedCount;
+        statsAvgAccuracy.textContent = `${avgAccuracy}%`;
+
+        // Barras por nivel
+        const renderLevelStat = (levelName, elements) => {
+          const l = levels[levelName];
+          elements.text.textContent = `${l.completed} / ${l.total}`;
+          const pct = l.total > 0 ? (l.completed / l.total) * 100 : 0;
+          elements.bar.style.width = `${pct}%`;
+        };
+
+        renderLevelStat('Beginner', { text: statsLevelBeginner, bar: barLevelBeginner });
+        renderLevelStat('Intermediate', { text: statsLevelIntermediate, bar: barLevelIntermediate });
+        renderLevelStat('Advanced', { text: statsLevelAdvanced, bar: barLevelAdvanced });
+
+        // Listado de historial reciente
+        statsRecentList.innerHTML = '';
+        const sortedHistory = Object.entries(progress)
+          .sort((a, b) => new Date(b[1].updatedAt) - new Date(a[1].updatedAt))
+          .slice(0, 4);
+
+        if (sortedHistory.length === 0) {
+          statsRecentList.innerHTML = `<p class="text-xs text-japandi-text/40 italic">Aún no hay prácticas registradas.</p>`;
+        } else {
+          sortedHistory.forEach(([lessonId, data]) => {
+            const originalLesson = LESSONS_DATABASE.find(l => l.id === lessonId);
+            if (!originalLesson) return;
+
+            const histItem = document.createElement('div');
+            histItem.className = "flex items-center justify-between p-2.5 bg-japandi-accentLight/40 rounded-lg border border-japandi-border/50 text-xs";
+            histItem.innerHTML = `
+              <div>
+                <span class="font-medium text-japandi-text block truncate max-w-[150px]">${originalLesson.title}</span>
+                <span class="text-[10px] text-japandi-text/40">${new Date(data.updatedAt).toLocaleDateString()}</span>
+              </div>
+              <div class="text-right">
+                <span class="font-bold text-japandi-accent">${data.score}% prec.</span>
+              </div>
+            `;
+            statsRecentList.appendChild(histItem);
+          });
+        }
+      }
+
+      // --- TOASTS DE ACCIÓN ---
+      function showToast(message, type = 'info') {
+        const container = document.getElementById('toast-container');
+        const toast = document.createElement('div');
+        
+        const colors = {
+          'success': 'bg-[#EEF4F0] text-[#4A6B53] border-[#D4E4D8]',
+          'warning': 'bg-[#FCF8F0] text-[#B88C4B] border-[#F3E6CE]',
+          'incorrect': 'bg-[#FAF0F0] text-[#A65B5B] border-[#F0D5D5]',
+          'info': 'bg-white text-japandi-text border-japandi-border'
+        };
+
+        const icons = {
+          'success': 'check-circle',
+          'warning': 'alert-circle',
+          'incorrect': 'x-circle',
+          'info': 'info'
+        };
+
+        toast.className = `p-3.5 rounded-xl shadow-lg border text-xs font-medium flex items-center gap-3 w-80 pointer-events-auto transform translate-y-2 opacity-0 transition-all duration-300 ${colors[type]}`;
+        toast.innerHTML = `
+          <i data-lucide="${icons[type]}" class="w-4 h-4 flex-shrink-0"></i>
+          <span class="flex-grow">${message}</span>
+          <button class="text-japandi-text/30 hover:text-japandi-text/70"><i data-lucide="x" class="w-3.5 h-3.5"></i></button>
+        `;
+
+        container.appendChild(toast);
+        lucide.createIcons();
+
+        // Transición de entrada
+        setTimeout(() => {
+          toast.classList.remove('translate-y-2', 'opacity-0');
+        }, 10);
+
+        // Descartar tras 4 segundos
+        const timer = setTimeout(() => dismiss(), 4000);
+
+        function dismiss() {
+          toast.classList.add('translate-y-[-8px]', 'opacity-0');
+          setTimeout(() => toast.remove(), 300);
+        }
+
+        toast.querySelector('button').addEventListener('click', () => {
+          clearTimeout(timer);
+          dismiss();
+        });
+      }
+
+      // Exponer showToast a nivel global de manera segura para accesibilidad desde AudioService
+      window.showToast = showToast;
+
+      // --- SISTEMA DE MODAL CONFIRMACIÓN ---
+      function showConfirm(title, message, callback) {
+        confirmTitle.textContent = title;
+        confirmMessage.textContent = message;
+        confirmCallback = callback;
+        
+        confirmModal.classList.remove('hidden');
+        setTimeout(() => {
+          confirmModal.classList.add('opacity-100');
+          confirmModalBox.classList.remove('scale-95');
+        }, 10);
+      }
+
+      function closeConfirm(isConfirmed) {
+        confirmModal.classList.remove('opacity-100');
+        confirmModalBox.classList.add('scale-95');
+        
+        setTimeout(() => {
+          confirmModal.classList.add('hidden');
+          if (isConfirmed && confirmCallback) {
+            confirmCallback();
+          }
+          confirmCallback = null;
+        }, 300);
+      }
+
+      // --- EFECTO DE CONFETTI ---
+      function triggerConfetti() {
+        const ctx = confettiCanvas.getContext('2d');
+        confettiCanvas.classList.remove('hidden');
+        
+        let width = confettiCanvas.width = window.innerWidth;
+        let height = confettiCanvas.height = window.innerHeight;
+        
+        const colors = ['#8C7A6B', '#4A6B53', '#B88C4B', '#A65B5B', '#E6DFD5'];
+        const particles = [];
+
+        class Particle {
+          constructor() {
+            this.x = Math.random() * width;
+            this.y = Math.random() * -height - 20;
+            this.rotation = Math.random() * 360;
+            this.rotSpeed = Math.random() * 4 - 2;
+            this.color = colors[Math.floor(Math.random() * colors.length)];
+            this.diameter = Math.random() * 8 + 6;
+            this.speed = Math.random() * 5 + 4;
+          }
+          update() {
+            this.y += this.speed;
+            this.rotation += this.rotSpeed;
+          }
+          draw() {
+            ctx.save();
+            ctx.translate(this.x, this.y);
+            ctx.rotate(this.rotation * Math.PI / 180);
+            ctx.fillStyle = this.color;
+            ctx.fillRect(-this.diameter / 2, -this.diameter / 2, this.diameter, this.diameter);
+            ctx.restore();
+          }
+        }
+
+        for (let i = 0; i < 120; i++) {
+          particles.push(new Particle());
+        }
+
+        let animationFrame;
+        function animate() {
+          ctx.clearRect(0, 0, width, height);
+          let finished = true;
+
+          particles.forEach(p => {
+            p.update();
+            p.draw();
+            if (p.y < height) {
+              finished = false;
+            }
+          });
+
+          if (finished) {
+            cancelAnimationFrame(animationFrame);
+            confettiCanvas.classList.add('hidden');
+          } else {
+            animationFrame = requestAnimationFrame(animate);
+          }
+        }
+
+        animate();
+
+        window.addEventListener('resize', () => {
+          width = confettiCanvas.width = window.innerWidth;
+          height = confettiCanvas.height = window.innerHeight;
+        });
+      }
+
+    });
+  </script>
+</body>
+</html>
