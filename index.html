@@ -273,10 +273,12 @@
             <!-- Cabecera de Lección -->
             <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-japandi-border">
               <div>
-                <div class="flex items-center gap-2 mb-1 animate-pulse">
+                <div class="flex items-center gap-2 mb-1">
                   <span id="lesson-category-tag" class="text-[10px] bg-japandi-accent text-white font-semibold uppercase tracking-wider px-2 py-0.5 rounded-md">Categoría</span>
                   <span id="lesson-type-badge" class="text-[10px] font-semibold uppercase tracking-wider px-2 py-0.5 rounded-md">TTS</span>
                   <span id="lesson-difficulty-badge" class="text-[10px] font-semibold uppercase tracking-wider px-2 py-0.5 rounded-md">Beginner</span>
+                  <!-- Badge del Progreso de Historias -->
+                  <span id="story-progress-badge" class="hidden text-[10px] bg-japandi-warning text-white font-semibold uppercase tracking-wider px-2 py-0.5 rounded-md">Oración 1 de 10</span>
                 </div>
                 <h2 id="active-lesson-title" class="font-serif text-xl sm:text-2xl font-bold text-japandi-text">Cargando lección...</h2>
               </div>
@@ -559,7 +561,23 @@
           title: "The Golden Bird Pathway",
           type: "TTS",
           category: "Stories",
-          text: "Deep within the ancient forest, a small golden bird guarded a secret path that only opened at midnight.",
+          sentences: [
+            "Deep within the ancient forest, a small golden bird guarded a secret path.",
+            "This magical trail only opened at midnight under a full moon.",
+            "Few travelers ever dared to enter, but those who did returned with tales of wonder."
+          ],
+          difficulty: "Intermediate"
+        },
+        {
+          id: "story-02-fallback",
+          title: "The Reverse Clockmaker",
+          type: "TTS",
+          category: "Stories",
+          sentences: [
+            "Once upon a time, an old clockmaker realized his clocks were ticking backward.",
+            "Every single day, his clocks reversed exactly five minutes of time.",
+            "He began to grow younger, watching his memories slowly fade away."
+          ],
           difficulty: "Intermediate"
         },
         {
@@ -585,6 +603,17 @@
 
       const usedIds = new Set();
       database.forEach((lesson, index) => {
+        // Soporte estructurado para Historias (Stories)
+        if (lesson.category === 'Stories') {
+          if (Array.isArray(lesson.sentences)) {
+            // Unir oraciones para compatibilidad del buscador global y previsualización
+            lesson.text = lesson.sentences.join(" ");
+          } else if (typeof lesson.text === 'string') {
+            // Dividir por puntuación si viene plano desde el exterior
+            lesson.sentences = lesson.text.split(/(?<=[.!?])\s+/);
+          }
+        }
+
         if (!lesson.id || usedIds.has(lesson.id)) {
           let hash = 0;
           const seed = (lesson.text || '') + (lesson.category || '') + index;
@@ -755,6 +784,7 @@
       speed: 0.9,
       loop: false,
       ttsVoice: null,
+      textOverride: null, // Guardar la frase actual de las historias
 
       init(lesson, speed, loop, voice) {
         this.stop();
@@ -763,6 +793,7 @@
         this.speed = speed;
         this.loop = loop;
         this.ttsVoice = voice;
+        this.textOverride = null;
 
         if (this.type === 'YOUTUBE') {
           this.initYoutube();
@@ -832,7 +863,9 @@
 
         if (this.type === 'TTS') {
           window.speechSynthesis.cancel();
-          const utterance = new SpeechSynthesisUtterance(this.activeLesson.text);
+          // Utilizar la frase actual en caso de Stories
+          const textToPlay = this.textOverride || this.activeLesson.text;
+          const utterance = new SpeechSynthesisUtterance(textToPlay);
           utterance.lang = 'en-US';
           utterance.rate = parseFloat(this.speed);
           
@@ -941,6 +974,9 @@
       let searchQuery = '';
       let remainingAttempts = 5; // Variable global de intentos por lección
       let activeGrammarType = null; // Subcategoría de tiempo gramatical activa
+      let activeStoryDifficulty = null; // Subcategoría de dificultad de Stories activa
+      let currentStorySentences = null; // Array de strings de la historia actual
+      let currentSentenceIndex = 0;     // Índice de la oración activa
 
       // Pantallas Principales
       const welcomeScreen = document.getElementById('welcome-screen');
@@ -957,6 +993,7 @@
       const noLessonState = document.getElementById('no-lesson-state');
       const activeLessonTitle = document.getElementById('active-lesson-title');
       const lessonCategoryTag = document.getElementById('lesson-category-tag');
+      const storyProgressBadge = document.getElementById('story-progress-badge');
       const lessonTypeBadge = document.getElementById('lesson-type-badge');
       const lessonDifficultyBadge = document.getElementById('lesson-difficulty-badge');
       const completionStatusBadge = document.getElementById('completion-status-badge');
@@ -1066,6 +1103,8 @@
           AudioService.stop();
           practiceScreen.classList.add('hidden');
           welcomeScreen.classList.remove('hidden');
+          activeGrammarType = null;
+          activeStoryDifficulty = null;
         });
 
         // Clic en las tarjetas de categorías de la bienvenida
@@ -1074,13 +1113,14 @@
             const cat = card.getAttribute('data-welcome-cat');
             activeCategory = cat;
             activeGrammarType = null; // Reajustar subnivel
+            activeStoryDifficulty = null; // Reajustar subnivel de Stories
             renderCategoryTabs();
             renderLessons();
             
             welcomeScreen.classList.add('hidden');
             practiceScreen.classList.remove('hidden');
             
-            if (cat === "Grammar Practice") {
+            if (cat === "Grammar Practice" || cat === "Stories") {
               noLessonState.classList.remove('hidden');
               noLessonState.classList.remove('opacity-0');
             } else {
@@ -1116,6 +1156,7 @@
           btn.addEventListener('click', () => {
             activeCategory = cat;
             activeGrammarType = null; // Reajustar subnivel gramatical
+            activeStoryDifficulty = null; // Reajustar subnivel de Stories
             renderCategoryTabs();
             renderLessons();
           });
@@ -1124,7 +1165,7 @@
         });
       }
 
-      // --- RENDERIZADO DE LECCIONES LATERALES (Menú de Tiempos Integrado) ---
+      // --- RENDERIZADO DE LECCIONES LATERALES (Menú de Tiempos e Historias Integrado) ---
       function renderLessons() {
         lessonsListContainer.innerHTML = '';
         const progress = StorageService.getProgress();
@@ -1135,6 +1176,17 @@
             lessonSearchInput.placeholder = `Buscar en ${activeGrammarType}...`;
           } else {
             lessonSearchInput.placeholder = "Buscar tema gramatical...";
+          }
+        } else if (activeCategory === 'Stories') {
+          if (activeStoryDifficulty) {
+            const diffLabels = {
+              "Beginner": "Básico",
+              "Intermediate": "Intermedio",
+              "Advanced": "Avanzado"
+            };
+            lessonSearchInput.placeholder = `Buscar en Historias > ${diffLabels[activeStoryDifficulty]}...`;
+          } else {
+            lessonSearchInput.placeholder = "Buscar nivel de historia...";
           }
         } else {
           lessonSearchInput.placeholder = "Buscar lección...";
@@ -1160,7 +1212,6 @@
           }
 
           filteredGrammarTypes.forEach(type => {
-            // Contar lecciones disponibles bajo este subtema
             const lessonCount = LESSONS_DATABASE.filter(l => 
               l.category === "Grammar Practice" && l.grammarType === type
             ).length;
@@ -1189,15 +1240,60 @@
           return;
         }
 
-        // 3. Renderizado normal para el resto de categorías o subcategorías gramaticales
+        // 3. Interceptación de menú de dificultades en Stories
+        if (activeCategory === 'Stories' && activeStoryDifficulty === null) {
+          const storyDifficulties = ["Beginner", "Intermediate", "Advanced"];
+          const difficultyLabels = {
+            "Beginner": "Básico (Beginner)",
+            "Intermediate": "Intermedio (Intermediate)",
+            "Advanced": "Avanzado (Advanced)"
+          };
+
+          const filteredDifficulties = storyDifficulties.filter(diff => 
+            difficultyLabels[diff].toLowerCase().includes(searchQuery.toLowerCase())
+          );
+
+          lessonsCountBadge.textContent = `${filteredDifficulties.length} niveles`;
+
+          filteredDifficulties.forEach(diff => {
+            const storyCount = LESSONS_DATABASE.filter(l => 
+              l.category === "Stories" && l.difficulty === diff
+            ).length;
+
+            const card = document.createElement('div');
+            card.className = "border border-japandi-border bg-japandi-card hover:border-japandi-accent hover:bg-japandi-accentLight/30 rounded-xl p-3.5 cursor-pointer transition-all mb-2 flex items-center justify-between";
+            card.innerHTML = `
+              <div class="flex flex-col">
+                <span class="text-xs font-semibold text-japandi-text uppercase tracking-wider">${difficultyLabels[diff]}</span>
+                <span class="text-[10px] text-japandi-text/40 mt-0.5">${storyCount} ${storyCount === 1 ? 'historia' : 'historias'} disponibles</span>
+              </div>
+              <i data-lucide="chevron-right" class="w-4 h-4 text-japandi-accent/50"></i>
+            `;
+
+            card.addEventListener('click', () => {
+              activeStoryDifficulty = diff;
+              searchQuery = ''; // Limpiar buscador tras ingresar
+              lessonSearchInput.value = '';
+              renderLessons();
+            });
+
+            lessonsListContainer.appendChild(card);
+          });
+
+          lucide.createIcons();
+          return;
+        }
+
+        // 4. Renderizado normal para el resto de categorías o subcategorías gramaticales / historias
         const filtered = LESSONS_DATABASE.filter(lesson => {
           const matchesSearch = lesson.title.toLowerCase().includes(searchQuery.toLowerCase()) || 
-                                lesson.text.toLowerCase().includes(searchQuery.toLowerCase());
+                                (lesson.text && lesson.text.toLowerCase().includes(searchQuery.toLowerCase()));
           const matchesDifficulty = activeFilter === 'all' || lesson.difficulty === activeFilter;
           const matchesCategory = activeCategory === 'Todas' || lesson.category === activeCategory;
           const matchesGrammarType = activeCategory !== 'Grammar Practice' || lesson.grammarType === activeGrammarType;
+          const matchesStoryDifficulty = activeCategory !== 'Stories' || lesson.difficulty === activeStoryDifficulty;
 
-          return matchesSearch && matchesDifficulty && matchesCategory && matchesGrammarType;
+          return matchesSearch && matchesDifficulty && matchesCategory && matchesGrammarType && matchesStoryDifficulty;
         });
 
         lessonsCountBadge.textContent = `${filtered.length} lecciones`;
@@ -1210,6 +1306,21 @@
           backBtn.innerHTML = `<i data-lucide="arrow-left" class="w-3.5 h-3.5"></i> Volver a temas`;
           backBtn.addEventListener('click', () => {
             activeGrammarType = null;
+            searchQuery = '';
+            lessonSearchInput.value = '';
+            renderLessons();
+          });
+          lessonsListContainer.appendChild(backBtn);
+        }
+
+        // Botón de retorno al menú de historias (Dificultades)
+        if (activeCategory === 'Stories' && activeStoryDifficulty !== null) {
+          const backBtn = document.createElement('button');
+          backBtn.id = 'btn-back-stories';
+          backBtn.className = "w-full mb-3 flex items-center justify-center gap-2 py-2 px-3 text-xs font-semibold text-japandi-accent border border-japandi-border rounded-xl bg-japandi-accentLight hover:bg-japandi-accentLight/80 transition-colors";
+          backBtn.innerHTML = `<i data-lucide="arrow-left" class="w-3.5 h-3.5"></i> Volver a dificultades`;
+          backBtn.addEventListener('click', () => {
+            activeStoryDifficulty = null;
             searchQuery = '';
             lessonSearchInput.value = '';
             renderLessons();
@@ -1290,6 +1401,19 @@
         noLessonState.classList.add('opacity-0');
         setTimeout(() => noLessonState.classList.add('hidden'), 300);
 
+        // Inicialización del estado de Historias (Stories) secuencial
+        if (lesson.category === 'Stories' && Array.isArray(lesson.sentences)) {
+          currentStorySentences = lesson.sentences;
+          currentSentenceIndex = 0;
+          
+          storyProgressBadge.classList.remove('hidden');
+          storyProgressBadge.textContent = `Oración 1 de ${currentStorySentences.length}`;
+        } else {
+          currentStorySentences = null;
+          currentSentenceIndex = 0;
+          storyProgressBadge.classList.add('hidden');
+        }
+
         // Actualizar UI activa
         activeLessonTitle.textContent = lesson.title;
         lessonCategoryTag.textContent = lesson.category + (lesson.grammarType ? ' > ' + lesson.grammarType : '');
@@ -1344,6 +1468,11 @@
           selectTtsVoice.value
         );
 
+        // Si es modo Stories, anular el texto completo de la lección con la oración inicial
+        if (currentStorySentences) {
+          AudioService.textOverride = currentStorySentences[currentSentenceIndex];
+        }
+
         // Refrescar listado para marcar activo visualmente
         renderLessons();
         showToast(`Lección "${lesson.title}" cargada`, 'info');
@@ -1381,6 +1510,10 @@
           if (AudioService.isPlaying) {
             AudioService.stop();
           } else {
+            // Sincronizar el override de audio si es modo historias activo
+            if (activeLesson && activeLesson.category === 'Stories' && currentStorySentences) {
+              AudioService.textOverride = currentStorySentences[currentSentenceIndex];
+            }
             AudioService.play();
           }
         });
@@ -1466,7 +1599,9 @@
         // Botón de Pista (Hint)
         btnActionHint.addEventListener('click', () => {
           if (!activeLesson) return;
-          const words = activeLesson.text.split(/\s+/);
+          const isStoriesMode = (activeLesson.category === 'Stories' && currentStorySentences);
+          const activeText = isStoriesMode ? currentStorySentences[currentSentenceIndex] : activeLesson.text;
+          const words = activeText.split(/\s+/);
           const randIndex = Math.floor(Math.random() * words.length);
           const hintWord = words[randIndex].replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g, "");
           showToast(`Pista (Palabra contenida): "${hintWord}"`, 'warning');
@@ -1515,6 +1650,49 @@
 
       // --- MÉTODOS DE LOGICA DE NEGOCIO ---
 
+      // Transición controlada a la siguiente frase del dictado secuencial
+      function advanceStorySentence() {
+        currentSentenceIndex++;
+        remainingAttempts = 5;
+        dictationInput.value = '';
+        charWordCount.textContent = '0 caracteres | 0 palabras';
+        feedbackPanel.classList.add('hidden');
+        dictationInput.placeholder = "Escucha atentamente el fragmento y escribe lo que oyes aquí... ¡Tienes 5 intentos para lograr la transcripción perfecta!";
+
+        if (currentSentenceIndex >= currentStorySentences.length) {
+          // La historia completa ha sido completada
+          StorageService.saveLessonProgress(activeLesson.id, 100, true, "");
+          completionStatusBadge.classList.remove('hidden');
+          completionStatusBadge.classList.add('inline-flex');
+          
+          showToast(`¡Felicidades! Has completado toda la historia: "${activeLesson.title}"`, "success");
+          triggerConfetti();
+
+          // Retornar al menú temático
+          activeStoryDifficulty = activeLesson.difficulty;
+          activeCategory = 'Stories';
+          renderCategoryTabs();
+          renderLessons();
+
+          // Mostrar estado de no selección
+          noLessonState.classList.remove('hidden');
+          noLessonState.classList.add('opacity-100');
+          activeLesson = null;
+          AudioService.stop();
+        } else {
+          // Mostrar progreso de la siguiente frase
+          storyProgressBadge.textContent = `Oración ${currentSentenceIndex + 1} de ${currentStorySentences.length}`;
+          
+          // Asignar el nuevo audio
+          AudioService.textOverride = currentStorySentences[currentSentenceIndex];
+          showToast(`Siguiente oración ${currentSentenceIndex + 1}...`, 'info');
+          
+          setTimeout(() => {
+            AudioService.play();
+          }, 500);
+        }
+      }
+
       // Acción de Verificación (Gestión de 5 Intentos)
       function verifyDictation() {
         if (!activeLesson) return;
@@ -1527,7 +1705,13 @@
 
         AudioService.stop();
 
-        const expectedWords = activeLesson.text.trim().split(/\s+/);
+        // Detectar si estamos bajo flujo de progreso secuencial (Stories)
+        const isStoriesMode = (activeLesson.category === 'Stories' && currentStorySentences);
+        const targetText = isStoriesMode 
+          ? currentStorySentences[currentSentenceIndex] 
+          : activeLesson.text;
+
+        const expectedWords = targetText.trim().split(/\s+/);
         const actualWords = userText.split(/\s+/);
 
         // Algoritmo Levenshtein palabra por palabra
@@ -1540,16 +1724,26 @@
 
         // Escenario de Éxito Directo (100% de precisión)
         if (accuracyScore === 100) {
-          StorageService.saveLessonProgress(activeLesson.id, 100, true, userText);
-          renderFeedbackVisuals(diffResults, 100);
-          updateGlobalStats();
-          renderLessons();
+          if (isStoriesMode) {
+            const sentenceProgressScore = Math.round(((currentSentenceIndex + 1) / currentStorySentences.length) * 100);
+            StorageService.saveLessonProgress(activeLesson.id, sentenceProgressScore, false, userText);
+            
+            showToast(`¡Excelente! Oración ${currentSentenceIndex + 1} completada con 100% de precisión.`, "success");
+            
+            // Avanzar automáticamente a la siguiente oración
+            advanceStorySentence();
+          } else {
+            StorageService.saveLessonProgress(activeLesson.id, 100, true, userText);
+            renderFeedbackVisuals(diffResults, 100);
+            updateGlobalStats();
+            renderLessons();
 
-          completionStatusBadge.classList.remove('hidden');
-          completionStatusBadge.classList.add('inline-flex');
+            completionStatusBadge.classList.remove('hidden');
+            completionStatusBadge.classList.add('inline-flex');
 
-          showToast("¡Impecable! 100% de precisión alcanzada.", "success");
-          triggerConfetti();
+            showToast("¡Impecable! 100% de precisión alcanzada.", "success");
+            triggerConfetti();
+          }
           return;
         }
 
@@ -1565,26 +1759,38 @@
           
           showToast(`Respuesta incorrecta. Te quedan ${remainingAttempts} intentos. ¡Sigue intentándolo!`, 'warning');
         } else {
-          // 0 intentos restantes: Congelar input y revelar solución final
-          dictationInput.setAttribute('disabled', 'true');
-          dictationInput.classList.add('opacity-60');
-          dictationInput.placeholder = "Se agotaron los intentos. Selecciona otra lección o reinicia tu progreso.";
+          // 0 intentos restantes:
+          if (isStoriesMode) {
+            // Guardar progreso parcial y avanzar para no truncar la práctica
+            const sentenceProgressScore = Math.round(((currentSentenceIndex + 1) / currentStorySentences.length) * 100);
+            StorageService.saveLessonProgress(activeLesson.id, sentenceProgressScore, false, userText);
+            
+            showToast(`Intentos agotados para la oración ${currentSentenceIndex + 1}. Avanzando...`, 'incorrect');
+            
+            // Pausa breve para asimilar la corrección antes de avanzar automáticamente
+            setTimeout(() => {
+              advanceStorySentence();
+            }, 1500);
+          } else {
+            dictationInput.setAttribute('disabled', 'true');
+            dictationInput.classList.add('opacity-60');
+            dictationInput.placeholder = "Se agotaron los intentos. Selecciona otra lección o reinicia tu progreso.";
 
-          // Guardar el progreso con la puntuación real obtenida
-          const completed = accuracyScore >= 90; // Completado si alcanza 90%+ al final
-          StorageService.saveLessonProgress(activeLesson.id, accuracyScore, completed, userText);
-          
-          // Mostrar feedback completo original
-          renderFeedbackVisuals(diffResults, accuracyScore);
-          updateGlobalStats();
-          renderLessons();
+            const completed = accuracyScore >= 90; // Completado si alcanza 90%+ al final
+            StorageService.saveLessonProgress(activeLesson.id, accuracyScore, completed, userText);
+            
+            // Mostrar feedback completo original
+            renderFeedbackVisuals(diffResults, accuracyScore);
+            updateGlobalStats();
+            renderLessons();
 
-          if (completed) {
-            completionStatusBadge.classList.remove('hidden');
-            completionStatusBadge.classList.add('inline-flex');
+            if (completed) {
+              completionStatusBadge.classList.remove('hidden');
+              completionStatusBadge.classList.add('inline-flex');
+            }
+
+            showToast(`Has agotado tus 5 intentos. Puntuación de precisión final: ${accuracyScore}%`, 'incorrect');
           }
-
-          showToast(`Has agotado tus 5 intentos. Puntuación de precisión final: ${accuracyScore}%`, 'incorrect');
         }
       }
 
