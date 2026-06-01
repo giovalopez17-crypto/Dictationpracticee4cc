@@ -300,7 +300,7 @@ const LESSONS_DATABASE = [
     category: "Directions & Navigation",
     text: "At the roundabout, take the third exit onto Highway eighty, then stay in the left lane to exit toward downtown.",
     difficulty: "Intermediate"
-  }
+  },
   {
     id: "gram-01",
     title: "International Marketing Strategy",
