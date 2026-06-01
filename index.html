@@ -66,6 +66,18 @@
       background: #8C7A6B;
       border-radius: 8px;
     }
+    /* Scrollbar delgada y elegante para las pestañas de categorías */
+    #category-tabs::-webkit-scrollbar {
+      height: 4px;
+    }
+    #category-tabs::-webkit-scrollbar-track {
+      background: #F3EFEA;
+      border-radius: 4px;
+    }
+    #category-tabs::-webkit-scrollbar-thumb {
+      background: #8C7A6B;
+      border-radius: 4px;
+    }
     textarea:focus {
       outline: none;
       border-color: #8C7A6B;
@@ -101,7 +113,7 @@
   <!-- ENCABEZADO -->
   <header class="border-b border-japandi-border bg-white/70 backdrop-blur-md sticky top-0 z-30">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-      <div class="flex items-center gap-3">
+      <div class="flex items-center gap-3 cursor-pointer select-none" id="btn-logo-home" title="Ir a Bienvenida">
         <div class="w-9 h-9 rounded-lg bg-japandi-accent flex items-center justify-center text-white shadow-sm">
           <i data-lucide="headphones" class="w-5 h-5"></i>
         </div>
@@ -132,214 +144,288 @@
   </header>
 
   <!-- CONTENIDO PRINCIPAL -->
-  <main class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full grid grid-cols-1 lg:grid-cols-12 gap-8">
+  <main class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full">
     
-    <!-- PANEL DE LECCIONES (IZQUIERDA) -->
-    <section class="lg:col-span-4 flex flex-col gap-6">
-      <div class="bg-white border border-japandi-border rounded-2xl p-5 shadow-sm flex flex-col h-[580px]">
-        <!-- Cabecera de Lecciones -->
-        <div class="mb-4">
-          <div class="flex items-center justify-between mb-3">
-            <h2 class="font-serif text-lg font-semibold text-japandi-text">Lecciones</h2>
-            <span class="text-xs text-japandi-accent bg-japandi-accentLight px-2 py-0.5 rounded-full font-medium" id="lessons-count">0 lecciones</span>
-          </div>
-          
-          <!-- Buscador y Filtros -->
-          <div class="flex flex-col gap-2">
-            <div class="relative">
-              <i data-lucide="search" class="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-japandi-text/40"></i>
-              <input type="text" id="lesson-search" placeholder="Buscar lección..." class="w-full text-xs pl-9 pr-3 py-2 border border-japandi-border rounded-lg focus:outline-none focus:border-japandi-accent focus:ring-2 focus:ring-japandi-accent/10">
-            </div>
-            
-            <div class="flex gap-1 overflow-x-auto pb-1" id="difficulty-filters">
-              <button data-filter="all" class="text-[11px] px-3 py-1 rounded-full bg-japandi-accent text-white font-medium transition-colors cursor-pointer whitespace-nowrap">Todas</button>
-              <button data-filter="Beginner" class="text-[11px] px-3 py-1 rounded-full border border-japandi-border text-japandi-text/70 font-medium hover:bg-japandi-accentLight transition-colors cursor-pointer whitespace-nowrap">Básico</button>
-              <button data-filter="Intermediate" class="text-[11px] px-3 py-1 rounded-full border border-japandi-border text-japandi-text/70 font-medium hover:bg-japandi-accentLight transition-colors cursor-pointer whitespace-nowrap">Intermedio</button>
-              <button data-filter="Advanced" class="text-[11px] px-3 py-1 rounded-full border border-japandi-border text-japandi-text/70 font-medium hover:bg-japandi-accentLight transition-colors cursor-pointer whitespace-nowrap">Avanzado</button>
-            </div>
+    <!-- PANTALLA DE BIENVENIDA (WELCOME SCREEN) -->
+    <section id="welcome-screen" class="fade-in max-w-4xl mx-auto py-8 sm:py-12 flex flex-col items-center">
+      <div class="text-center mb-10 max-w-2xl">
+        <div class="w-16 h-16 rounded-full bg-japandi-accentLight flex items-center justify-center text-japandi-accent mx-auto mb-6">
+          <i data-lucide="sparkles" class="w-8 h-8 animate-pulse"></i>
+        </div>
+        <h2 class="font-serif text-3xl sm:text-4xl font-bold tracking-tight text-japandi-text mb-4">Cultiva tu Oído en Inglés</h2>
+        <p class="text-japandi-text/70 text-sm sm:text-base leading-relaxed">
+          Bienvenido a una experiencia de aprendizaje consciente e inspirada en el minimalismo Japandi. Perfecciona tu spelling, gramática y comprensión auditiva en inglés con lecciones reales e inteligentes que desafían tu precisión.
+        </p>
+      </div>
+
+      <!-- Rejilla de Accesos Directos por Categorías -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 w-full mb-10">
+        <div data-welcome-cat="Grammar Practice" class="bg-white border border-japandi-border rounded-xl p-5 text-left cursor-pointer hover:border-japandi-accent hover:shadow-sm hover:scale-[1.01] transition-all flex items-start gap-3">
+          <div class="p-2 bg-japandi-accentLight text-japandi-accent rounded-lg"><i data-lucide="book-open" class="w-5 h-5"></i></div>
+          <div>
+            <h4 class="font-serif font-bold text-sm text-japandi-text">Grammar Practice</h4>
+            <p class="text-[11px] text-japandi-text/50 mt-1">Domina tiempos verbales y sintaxis precisa.</p>
           </div>
         </div>
-
-        <!-- Lista de Lecciones con Scroll -->
-        <div class="flex-grow overflow-y-auto custom-scrollbar pr-1" id="lessons-list">
-          <!-- Se inyectan dinámicamente con JS -->
+        <div data-welcome-cat="Stories" class="bg-white border border-japandi-border rounded-xl p-5 text-left cursor-pointer hover:border-japandi-accent hover:shadow-sm hover:scale-[1.01] transition-all flex items-start gap-3">
+          <div class="p-2 bg-japandi-accentLight text-japandi-accent rounded-lg"><i data-lucide="feather" class="w-5 h-5"></i></div>
+          <div>
+            <h4 class="font-serif font-bold text-sm text-japandi-text">Stories</h4>
+            <p class="text-[11px] text-japandi-text/50 mt-1">Dictados narrativos de cuentos cortos.</p>
+          </div>
+        </div>
+        <div data-welcome-cat="YouTube Clips" class="bg-white border border-japandi-border rounded-xl p-5 text-left cursor-pointer hover:border-japandi-accent hover:shadow-sm hover:scale-[1.01] transition-all flex items-start gap-3">
+          <div class="p-2 bg-japandi-accentLight text-japandi-accent rounded-lg"><i data-lucide="video" class="w-5 h-5"></i></div>
+          <div>
+            <h4 class="font-serif font-bold text-sm text-japandi-text">YouTube Clips</h4>
+            <p class="text-[11px] text-japandi-text/50 mt-1">Escucha fragmentos de discursos históricos.</p>
+          </div>
+        </div>
+        <div data-welcome-cat="Spelling" class="bg-white border border-japandi-border rounded-xl p-5 text-left cursor-pointer hover:border-japandi-accent hover:shadow-sm hover:scale-[1.01] transition-all flex items-start gap-3">
+          <div class="p-2 bg-japandi-accentLight text-japandi-accent rounded-lg"><i data-lucide="spell-check" class="w-5 h-5"></i></div>
+          <div>
+            <h4 class="font-serif font-bold text-sm text-japandi-text">Spelling</h4>
+            <p class="text-[11px] text-japandi-text/50 mt-1">Deletreo de nombres letra a letra.</p>
+          </div>
+        </div>
+        <div data-welcome-cat="Connected Speech" class="bg-white border border-japandi-border rounded-xl p-5 text-left cursor-pointer hover:border-japandi-accent hover:shadow-sm hover:scale-[1.01] transition-all flex items-start gap-3">
+          <div class="p-2 bg-japandi-accentLight text-japandi-accent rounded-lg"><i data-lucide="waveform" class="w-5 h-5"></i></div>
+          <div>
+            <h4 class="font-serif font-bold text-sm text-japandi-text">Connected Speech</h4>
+            <p class="text-[11px] text-japandi-text/50 mt-1">Reducciones de voz naturales en inglés fluido.</p>
+          </div>
+        </div>
+        <div data-welcome-cat="Critical Prices" class="bg-white border border-japandi-border rounded-xl p-5 text-left cursor-pointer hover:border-japandi-accent hover:shadow-sm hover:scale-[1.01] transition-all flex items-start gap-3">
+          <div class="p-2 bg-japandi-accentLight text-japandi-accent rounded-lg"><i data-lucide="dollar-sign" class="w-5 h-5"></i></div>
+          <div>
+            <h4 class="font-serif font-bold text-sm text-japandi-text">Critical Prices</h4>
+            <p class="text-[11px] text-japandi-text/50 mt-1">Transcribe cifras monetarias y decimales.</p>
+          </div>
         </div>
       </div>
+
+      <!-- Botón Principal -->
+      <button id="btn-start-practice" class="px-8 py-3.5 bg-japandi-accent hover:bg-japandi-accentHover text-white rounded-xl text-base font-medium transition-all shadow-md inline-flex items-center gap-3 cursor-pointer transform hover:scale-[1.02]">
+        Comenzar a Practicar <i data-lucide="arrow-right" class="w-5 h-5"></i>
+      </button>
     </section>
 
-    <!-- ÁREA DE TRABAJO DEL DICTADO (DERECHA) -->
-    <section class="lg:col-span-8 flex flex-col gap-6">
+    <!-- PANTALLA DE PRÁCTICA (PRACTICE SCREEN - ENCAPSULADA) -->
+    <div id="practice-screen" class="hidden grid grid-cols-1 lg:grid-cols-12 gap-8 fade-in">
       
-      <!-- CARD PRINCIPAL DEL JUEGO -->
-      <div class="bg-white border border-japandi-border rounded-2xl p-6 sm:p-8 shadow-sm flex flex-col justify-between min-h-[580px] relative overflow-hidden" id="workspace-container">
+      <!-- PANEL DE LECCIONES (IZQUIERDA) -->
+      <section class="lg:col-span-4 flex flex-col gap-6">
+        <div class="bg-white border border-japandi-border rounded-2xl p-5 shadow-sm flex flex-col h-[580px]">
+          <!-- Cabecera de Lecciones -->
+          <div class="mb-4">
+            <div class="flex items-center justify-between mb-3">
+              <h2 class="font-serif text-lg font-semibold text-japandi-text">Lecciones</h2>
+              <span class="text-xs text-japandi-accent bg-japandi-accentLight px-2 py-0.5 rounded-full font-medium" id="lessons-count">0 lecciones</span>
+            </div>
+
+            <!-- Pestañas de Módulos (Categorías) Horizontales con Scroll -->
+            <div class="flex gap-1.5 overflow-x-auto pb-3 mb-3 scroll-smooth whitespace-nowrap" id="category-tabs">
+              <!-- Se inyectan dinámicamente con JS -->
+            </div>
+            
+            <!-- Buscador y Filtros -->
+            <div class="flex flex-col gap-2">
+              <div class="relative">
+                <i data-lucide="search" class="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-japandi-text/40"></i>
+                <input type="text" id="lesson-search" placeholder="Buscar lección..." class="w-full text-xs pl-9 pr-3 py-2 border border-japandi-border rounded-lg focus:outline-none focus:border-japandi-accent focus:ring-2 focus:ring-japandi-accent/10">
+              </div>
+              
+              <div class="flex gap-1 overflow-x-auto pb-1" id="difficulty-filters">
+                <button data-filter="all" class="text-[11px] px-3 py-1 rounded-full bg-japandi-accent text-white font-medium transition-colors cursor-pointer whitespace-nowrap">Todas</button>
+                <button data-filter="Beginner" class="text-[11px] px-3 py-1 rounded-full border border-japandi-border text-japandi-text/70 font-medium hover:bg-japandi-accentLight transition-colors cursor-pointer whitespace-nowrap">Básico</button>
+                <button data-filter="Intermediate" class="text-[11px] px-3 py-1 rounded-full border border-japandi-border text-japandi-text/70 font-medium hover:bg-japandi-accentLight transition-colors cursor-pointer whitespace-nowrap">Intermedio</button>
+                <button data-filter="Advanced" class="text-[11px] px-3 py-1 rounded-full border border-japandi-border text-japandi-text/70 font-medium hover:bg-japandi-accentLight transition-colors cursor-pointer whitespace-nowrap">Avanzado</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Lista de Lecciones con Scroll -->
+          <div class="flex-grow overflow-y-auto custom-scrollbar pr-1" id="lessons-list">
+            <!-- Se inyectan dinámicamente con JS -->
+          </div>
+        </div>
+      </section>
+
+      <!-- ÁREA DE TRABAJO DEL DICTADO (DERECHA) -->
+      <section class="lg:col-span-8 flex flex-col gap-6">
         
-        <!-- Estado de no selección -->
-        <div id="no-lesson-state" class="absolute inset-0 bg-white z-20 flex flex-col items-center justify-center text-center p-6 transition-opacity duration-300">
-          <div class="w-16 h-16 rounded-full bg-japandi-accentLight flex items-center justify-center text-japandi-accent mb-4">
-            <i data-lucide="book-open" class="w-8 h-8"></i>
-          </div>
-          <h3 class="font-serif text-xl font-semibold mb-2">Comienza tu práctica</h3>
-          <p class="text-japandi-text/60 text-sm max-w-sm mb-6">Selecciona una lección del panel lateral para iniciar el dictado en inglés. Puedes elegir entre audios de síntesis inteligente o clips de YouTube reales.</p>
-          <button id="btn-select-first" class="px-5 py-2.5 bg-japandi-accent hover:bg-japandi-accentHover text-white rounded-lg text-sm font-medium transition-colors shadow-sm inline-flex items-center gap-2">
-            Ver Primera Lección <i data-lucide="arrow-right" class="w-4 h-4"></i>
-          </button>
-        </div>
-
-        <!-- Estado de Lección Activa -->
-        <div class="flex flex-col gap-6">
-          <!-- Cabecera de Lección -->
-          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-japandi-border">
-            <div>
-              <div class="flex items-center gap-2 mb-1">
-                <span id="lesson-type-badge" class="text-[10px] font-semibold uppercase tracking-wider px-2 py-0.5 rounded-md">TTS</span>
-                <span id="lesson-difficulty-badge" class="text-[10px] font-semibold uppercase tracking-wider px-2 py-0.5 rounded-md">Beginner</span>
-              </div>
-              <h2 id="active-lesson-title" class="font-serif text-xl sm:text-2xl font-bold text-japandi-text">Cargando lección...</h2>
+        <!-- CARD PRINCIPAL DEL JUEGO -->
+        <div class="bg-white border border-japandi-border rounded-2xl p-6 sm:p-8 shadow-sm flex flex-col justify-between min-h-[580px] relative overflow-hidden" id="workspace-container">
+          
+          <!-- Estado de no selección -->
+          <div id="no-lesson-state" class="absolute inset-0 bg-white z-20 flex flex-col items-center justify-center text-center p-6 transition-opacity duration-300">
+            <div class="w-16 h-16 rounded-full bg-japandi-accentLight flex items-center justify-center text-japandi-accent mb-4">
+              <i data-lucide="book-open" class="w-8 h-8"></i>
             </div>
-            
-            <!-- Acciones rápidas de Lección -->
-            <div class="flex items-center gap-2">
-              <span id="completion-status-badge" class="hidden text-xs bg-japandi-correctBg text-japandi-correct border border-japandi-correctBorder font-medium px-2.5 py-1 rounded-full items-center gap-1">
-                <i data-lucide="check-circle" class="w-3.5 h-3.5"></i> Completado
-              </span>
-            </div>
-          </div>
-
-          <!-- REPRODUCTOR DE AUDIO / EMBED YOUTUBE -->
-          <div class="bg-japandi-accentLight/50 border border-japandi-border rounded-xl p-4 sm:p-5">
-            <!-- Contenedor ocultable del reproductor de YouTube -->
-            <div id="youtube-player-container" class="hidden mb-4 overflow-hidden rounded-lg aspect-video max-w-sm mx-auto border border-japandi-border shadow-inner">
-              <div id="youtube-player"></div>
-            </div>
-
-            <!-- Interfaz de Control de Audio -->
-            <div class="flex flex-col sm:flex-row items-center gap-4 justify-between">
-              
-              <!-- Botones de Reproducción -->
-              <div class="flex items-center gap-2">
-                <button id="btn-audio-play" class="w-12 h-12 rounded-full bg-japandi-accent text-white hover:bg-japandi-accentHover flex items-center justify-center transition-all shadow-md focus:outline-none" title="Reproducir/Pausar (Atajo: Esc)">
-                  <i data-lucide="play" class="w-5 h-5" id="play-icon"></i>
-                </button>
-                <button id="btn-audio-replay-5" class="p-2 border border-japandi-border rounded-lg bg-white hover:bg-japandi-accentLight transition-colors text-japandi-accent" title="Retroceder 5 segundos">
-                  <i data-lucide="rotate-ccw" class="w-4 h-4"></i>
-                </button>
-                <button id="btn-audio-stop" class="p-2 border border-japandi-border rounded-lg bg-white hover:bg-japandi-accentLight transition-colors text-japandi-accent" title="Detener reproducción">
-                  <i data-lucide="square" class="w-4 h-4"></i>
-                </button>
-              </div>
-
-              <!-- Controles de Configuración de Reproducción -->
-              <div class="flex flex-wrap items-center gap-4 justify-end text-xs text-japandi-text/80 w-full sm:w-auto">
-                
-                <!-- Bucle inteligente -->
-                <label class="flex items-center gap-2 cursor-pointer select-none">
-                  <input type="checkbox" id="chk-audio-loop" class="rounded border-japandi-border text-japandi-accent focus:ring-japandi-accent/30 w-4 h-4">
-                  <span class="font-medium inline-flex items-center gap-1"><i data-lucide="repeat" class="w-3.5 h-3.5"></i> Auto-Bucle</span>
-                </label>
-
-                <!-- Selector de Velocidad (Velocidades) -->
-                <div class="flex items-center gap-2 border-l border-japandi-border pl-4">
-                  <span class="font-medium">Velocidad:</span>
-                  <select id="select-audio-speed" class="bg-white border border-japandi-border rounded px-2 py-1 text-xs focus:outline-none focus:border-japandi-accent">
-                    <option value="0.7">0.7x (Lento)</option>
-                    <option value="0.8">0.8x</option>
-                    <option value="0.9" selected>0.9x (Recomendado)</option>
-                    <option value="1.0">1.0x (Normal)</option>
-                    <option value="1.1">1.1x (Rápido)</option>
-                  </select>
-                </div>
-
-                <!-- Selector de Voces (Solo TTS) -->
-                <div id="tts-voice-wrapper" class="flex items-center gap-2 border-l border-japandi-border pl-4">
-                  <span class="font-medium"><i data-lucide="globe" class="w-3.5 h-3.5 inline"></i> Voz:</span>
-                  <select id="select-tts-voice" class="bg-white border border-japandi-border rounded px-2 py-1 text-xs focus:outline-none focus:border-japandi-accent max-w-[120px]">
-                    <option value="auto">Por defecto</option>
-                  </select>
-                </div>
-
-                <!-- Mostrar Video (Solo YouTube) -->
-                <button id="btn-toggle-video" class="hidden items-center gap-1 text-xs border border-japandi-border bg-white px-2.5 py-1 rounded hover:bg-japandi-accentLight transition-colors">
-                  <i data-lucide="eye" class="w-3.5 h-3.5"></i> <span>Ver Video</span>
-                </button>
-              </div>
-
-            </div>
-          </div>
-
-          <!-- PANEL DE DICTADO Y TEXTAREA -->
-          <div class="flex flex-col gap-2">
-            <div class="flex items-center justify-between text-xs text-japandi-text/60">
-              <label for="dictation-input" class="font-medium">Tu transcripción:</label>
-              <span id="char-word-count">0 caracteres | 0 palabras</span>
-            </div>
-            
-            <textarea id="dictation-input" rows="4" class="w-full border border-japandi-border rounded-xl p-4 text-base leading-relaxed bg-japandi-bg font-mono transition-all resize-none custom-scrollbar" placeholder="Escucha atentamente el fragmento y escribe lo que oyes aquí..."></textarea>
-            
-            <p class="text-[11px] text-japandi-text/40 italic flex items-center gap-1">
-              <i data-lucide="keyboard" class="w-3.5 h-3.5"></i> Atajos: <kbd class="bg-japandi-accentLight px-1 rounded border">Esc</kbd> Reproducir/Pausar • <kbd class="bg-japandi-accentLight px-1 rounded border">Ctrl + Enter</kbd> Verificar
-            </p>
-          </div>
-
-          <!-- BOTONES DE ACCIÓN -->
-          <div class="flex items-center justify-between gap-4 pt-2">
-            <button id="btn-action-clear" class="px-4 py-2 text-xs border border-japandi-border rounded-lg text-japandi-text/70 hover:bg-japandi-accentLight transition-colors font-medium flex items-center gap-1.5 cursor-pointer">
-              <i data-lucide="trash-2" class="w-4 h-4"></i> Limpiar
+            <h3 class="font-serif text-xl font-semibold mb-2">Comienza tu práctica</h3>
+            <p class="text-japandi-text/60 text-sm max-w-sm mb-6">Selecciona una lección del panel lateral para iniciar el dictado en inglés. Puedes elegir entre audios de síntesis inteligente o clips de YouTube reales.</p>
+            <button id="btn-select-first" class="px-5 py-2.5 bg-japandi-accent hover:bg-japandi-accentHover text-white rounded-lg text-sm font-medium transition-colors shadow-sm inline-flex items-center gap-2">
+              Ver Primera Lección <i data-lucide="arrow-right" class="w-4 h-4"></i>
             </button>
-            
-            <div class="flex items-center gap-2">
-              <button id="btn-action-hint" class="px-4 py-2 text-xs border border-japandi-accent/30 text-japandi-accent rounded-lg hover:bg-japandi-accentLight transition-colors font-medium flex items-center gap-1.5 cursor-pointer">
-                <i data-lucide="lightbulb" class="w-4 h-4"></i> Pista
-              </button>
-              <button id="btn-action-verify" class="px-6 py-2 bg-japandi-accent text-white rounded-lg hover:bg-japandi-accentHover transition-colors font-medium text-sm flex items-center gap-1.5 shadow-sm cursor-pointer">
-                <i data-lucide="check" class="w-4 h-4"></i> Verificar Dictado
-              </button>
-            </div>
           </div>
 
-          <!-- PANEL DE FEEDBACK (SÓLO SI ESTÁ VERIFICADO) -->
-          <div id="feedback-panel" class="hidden border-t border-japandi-border pt-6 fade-in">
-            <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-4">
+          <!-- Estado de Lección Activa -->
+          <div class="flex flex-col gap-6">
+            <!-- Cabecera de Lección -->
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-japandi-border">
               <div>
-                <h3 class="font-serif text-lg font-bold">Resultado de la Validación</h3>
-                <p class="text-xs text-japandi-text/60">Haz clic sobre las palabras incorrectas para ver el detalle comparativo.</p>
+                <div class="flex items-center gap-2 mb-1">
+                  <span id="lesson-category-tag" class="text-[10px] bg-japandi-accent text-white font-semibold uppercase tracking-wider px-2 py-0.5 rounded-md">Categoría</span>
+                  <span id="lesson-type-badge" class="text-[10px] font-semibold uppercase tracking-wider px-2 py-0.5 rounded-md">TTS</span>
+                  <span id="lesson-difficulty-badge" class="text-[10px] font-semibold uppercase tracking-wider px-2 py-0.5 rounded-md">Beginner</span>
+                </div>
+                <h2 id="active-lesson-title" class="font-serif text-xl sm:text-2xl font-bold text-japandi-text">Cargando lección...</h2>
               </div>
               
-              <div class="flex items-center gap-3">
-                <!-- Porcentaje de Acierto -->
-                <div class="bg-japandi-accentLight px-4 py-2 rounded-xl flex items-center gap-2.5">
-                  <span class="text-xs font-medium text-japandi-text/60">Precisión:</span>
-                  <span id="feedback-accuracy-score" class="font-bold text-lg text-japandi-accent">0%</span>
+              <!-- Acciones rápidas de Lección -->
+              <div class="flex items-center gap-2">
+                <span id="completion-status-badge" class="hidden text-xs bg-japandi-correctBg text-japandi-correct border border-japandi-correctBorder font-medium px-2.5 py-1 rounded-full items-center gap-1">
+                  <i data-lucide="check-circle" class="w-3.5 h-3.5"></i> Completado
+                </span>
+              </div>
+            </div>
+
+            <!-- REPRODUCTOR DE AUDIO / EMBED YOUTUBE -->
+            <div class="bg-japandi-accentLight/50 border border-japandi-border rounded-xl p-4 sm:p-5">
+              <!-- Contenedor ocultable del reproductor de YouTube -->
+              <div id="youtube-player-container" class="hidden mb-4 overflow-hidden rounded-lg aspect-video max-w-sm mx-auto border border-japandi-border shadow-inner">
+                <div id="youtube-player"></div>
+              </div>
+
+              <!-- Interfaz de Control de Audio -->
+              <div class="flex flex-col sm:flex-row items-center gap-4 justify-between">
+                
+                <!-- Botones de Reproducción -->
+                <div class="flex items-center gap-2">
+                  <button id="btn-audio-play" class="w-12 h-12 rounded-full bg-japandi-accent text-white hover:bg-japandi-accentHover flex items-center justify-center transition-all shadow-md focus:outline-none" title="Reproducir/Pausar (Atajo: Esc)">
+                    <i data-lucide="play" class="w-5 h-5" id="play-icon"></i>
+                  </button>
+                  <button id="btn-audio-replay-5" class="p-2 border border-japandi-border rounded-lg bg-white hover:bg-japandi-accentLight transition-colors text-japandi-accent" title="Retroceder 5 segundos">
+                    <i data-lucide="rotate-ccw" class="w-4 h-4"></i>
+                  </button>
+                  <button id="btn-audio-stop" class="p-2 border border-japandi-border rounded-lg bg-white hover:bg-japandi-accentLight transition-colors text-japandi-accent" title="Detener reproducción">
+                    <i data-lucide="square" class="w-4 h-4"></i>
+                  </button>
+                </div>
+
+                <!-- Controles de Configuración de Reproducción -->
+                <div class="flex flex-wrap items-center gap-4 justify-end text-xs text-japandi-text/80 w-full sm:w-auto">
+                  
+                  <!-- Bucle inteligente -->
+                  <label class="flex items-center gap-2 cursor-pointer select-none">
+                    <input type="checkbox" id="chk-audio-loop" class="rounded border-japandi-border text-japandi-accent focus:ring-japandi-accent/30 w-4 h-4">
+                    <span class="font-medium inline-flex items-center gap-1"><i data-lucide="repeat" class="w-3.5 h-3.5"></i> Auto-Bucle</span>
+                  </label>
+
+                  <!-- Selector de Velocidad (Velocidades) -->
+                  <div class="flex items-center gap-2 border-l border-japandi-border pl-4">
+                    <span class="font-medium">Velocidad:</span>
+                    <select id="select-audio-speed" class="bg-white border border-japandi-border rounded px-2 py-1 text-xs focus:outline-none focus:border-japandi-accent">
+                      <option value="0.7">0.7x (Lento)</option>
+                      <option value="0.8">0.8x</option>
+                      <option value="0.9" selected>0.9x (Recomendado)</option>
+                      <option value="1.0">1.0x (Normal)</option>
+                      <option value="1.1">1.1x (Rápido)</option>
+                    </select>
+                  </div>
+
+                  <!-- Selector de Voces (Solo TTS) -->
+                  <div id="tts-voice-wrapper" class="flex items-center gap-2 border-l border-japandi-border pl-4">
+                    <span class="font-medium"><i data-lucide="globe" class="w-3.5 h-3.5 inline"></i> Voz:</span>
+                    <select id="select-tts-voice" class="bg-white border border-japandi-border rounded px-2 py-1 text-xs focus:outline-none focus:border-japandi-accent max-w-[120px]">
+                      <option value="auto">Por defecto</option>
+                    </select>
+                  </div>
+
+                  <!-- Mostrar Video (Solo YouTube) -->
+                  <button id="btn-toggle-video" class="hidden items-center gap-1 text-xs border border-japandi-border bg-white px-2.5 py-1 rounded hover:bg-japandi-accentLight transition-colors">
+                    <i data-lucide="eye" class="w-3.5 h-3.5"></i> <span>Ver Video</span>
+                  </button>
+                </div>
+
+              </div>
+            </div>
+
+            <!-- PANEL DE DICTADO Y TEXTAREA -->
+            <div class="flex flex-col gap-2">
+              <div class="flex items-center justify-between text-xs text-japandi-text/60">
+                <label class="font-medium">Tu transcripción:</label>
+                <span id="char-word-count">0 caracteres | 0 palabras</span>
+              </div>
+              
+              <textarea id="dictation-input" rows="4" class="w-full border border-japandi-border rounded-xl p-4 text-base leading-relaxed bg-japandi-bg font-mono transition-all resize-none custom-scrollbar" placeholder="Escucha atentamente el fragmento y escribe lo que oyes aquí... ¡Tienes 5 intentos para lograr la transcripción perfecta!"></textarea>
+              
+              <p class="text-[11px] text-japandi-text/40 italic flex items-center gap-1">
+                <i data-lucide="keyboard" class="w-3.5 h-3.5"></i> Atajos: <kbd class="bg-japandi-accentLight px-1 rounded border">Esc</kbd> Reproducir/Pausar • <kbd class="bg-japandi-accentLight px-1 rounded border">Ctrl + Enter</kbd> Verificar
+              </p>
+            </div>
+
+            <!-- BOTONES DE ACCIÓN -->
+            <div class="flex items-center justify-between gap-4 pt-2">
+              <button id="btn-action-clear" class="px-4 py-2 text-xs border border-japandi-border rounded-lg text-japandi-text/70 hover:bg-japandi-accentLight transition-colors font-medium flex items-center gap-1.5 cursor-pointer">
+                <i data-lucide="trash-2" class="w-4 h-4"></i> Limpiar
+              </button>
+              
+              <div class="flex items-center gap-2">
+                <button id="btn-action-hint" class="px-4 py-2 text-xs border border-japandi-accent/30 text-japandi-accent rounded-lg hover:bg-japandi-accentLight transition-colors font-medium flex items-center gap-1.5 cursor-pointer">
+                  <i data-lucide="lightbulb" class="w-4 h-4"></i> Pista
+                </button>
+                <button id="btn-action-verify" class="px-6 py-2 bg-japandi-accent text-white rounded-lg hover:bg-japandi-accentHover transition-colors font-medium text-sm flex items-center gap-1.5 shadow-sm cursor-pointer">
+                  <i data-lucide="check" class="w-4 h-4"></i> Verificar Dictado
+                </button>
+              </div>
+            </div>
+
+            <!-- PANEL DE FEEDBACK (SÓLO SI ESTÁ VERIFICADO) -->
+            <div id="feedback-panel" class="hidden border-t border-japandi-border pt-6 fade-in">
+              <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-4">
+                <div>
+                  <h3 class="font-serif text-lg font-bold">Resultado de la Validación</h3>
+                  <p class="text-xs text-japandi-text/60">Haz clic sobre las palabras incorrectas para ver el detalle comparativo.</p>
+                </div>
+                
+                <div class="flex items-center gap-3">
+                  <!-- Porcentaje de Acierto -->
+                  <div class="bg-japandi-accentLight px-4 py-2 rounded-xl flex items-center gap-2.5">
+                    <span class="text-xs font-medium text-japandi-text/60" id="feedback-score-label">Precisión:</span>
+                    <span id="feedback-accuracy-score" class="font-bold text-lg text-japandi-accent">0%</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Caja de Palabras Color-Coded -->
+              <div id="feedback-word-container" class="border border-japandi-border bg-japandi-bg p-5 rounded-xl flex flex-wrap gap-x-2 gap-y-3 font-serif text-lg leading-relaxed max-h-[160px] overflow-y-auto custom-scrollbar">
+                <!-- Renderizado dinámico -->
+              </div>
+
+              <!-- Leyenda Explicativa -->
+              <div class="flex flex-wrap gap-4 mt-3 text-xs justify-end">
+                <div class="flex items-center gap-1.5">
+                  <span class="w-3 h-3 rounded-full bg-japandi-correct"></span>
+                  <span class="text-japandi-text/60">Correcto</span>
+                </div>
+                <div class="flex items-center gap-1.5">
+                  <span class="w-3 h-3 rounded-full bg-japandi-incorrect"></span>
+                  <span class="text-japandi-text/60">Incorrecto / Error</span>
+                </div>
+                <div class="flex items-center gap-1.5">
+                  <span class="w-3 h-3 rounded-full bg-japandi-warning"></span>
+                  <span class="text-japandi-text/60">Omisión</span>
                 </div>
               </div>
             </div>
 
-            <!-- Caja de Palabras Color-Coded -->
-            <div id="feedback-word-container" class="border border-japandi-border bg-japandi-bg p-5 rounded-xl flex flex-wrap gap-x-2 gap-y-3 font-serif text-lg leading-relaxed max-h-[160px] overflow-y-auto custom-scrollbar">
-              <!-- Renderizado dinámico -->
-            </div>
-
-            <!-- Leyenda Explicativa -->
-            <div class="flex flex-wrap gap-4 mt-3 text-xs justify-end">
-              <div class="flex items-center gap-1.5">
-                <span class="w-3 h-3 rounded-full bg-japandi-correct"></span>
-                <span class="text-japandi-text/60">Correcto</span>
-              </div>
-              <div class="flex items-center gap-1.5">
-                <span class="w-3 h-3 rounded-full bg-japandi-incorrect"></span>
-                <span class="text-japandi-text/60">Incorrecto / Error</span>
-              </div>
-              <div class="flex items-center gap-1.5">
-                <span class="w-3 h-3 rounded-full bg-japandi-warning"></span>
-                <span class="text-japandi-text/60">Omisión</span>
-              </div>
-            </div>
           </div>
 
         </div>
+      </section>
 
-      </div>
-    </section>
-
+    </div>
   </main>
 
   <!-- PANEL FLOTANTE DE ESTADÍSTICAS DETALLADAS -->
@@ -444,33 +530,74 @@
   <script src="https://www.youtube.com/iframe_api"></script>
 
   <script>
-    // --- 1. MODELO Y BANCO DE DATOS DE LECCIONES ---
+    // --- 1. MODELO Y BANCO DE DATOS DE LECCIONES (Categorías Exactas de Dictado) ---
     const LESSONS_DATABASE = [
       {
-        id: "tts-01-morning",
-        title: "Daily Morning Habits",
+        id: "gram-01",
+        title: "Conditional Intent",
         type: "TTS",
-        text: "Every morning, I wake up at six o'clock, drink a glass of warm water, and stretch for ten minutes before making breakfast.",
-        difficulty: "Beginner"
-      },
-      {
-        id: "tts-02-climate",
-        title: "Weather Forecast Update",
-        type: "TTS",
-        text: "The weather forecast suggests heavy rain with a high chance of unexpected thunderstorms and cold winds by early evening.",
-        difficulty: "Intermediate"
-      },
-      {
-        id: "tts-03-philosophy",
-        title: "The Nature of Time",
-        type: "TTS",
-        text: "Time is a subjective phenomenon, stretching endlessly during moments of boredom, yet vanishing when we are deeply engaged.",
+        category: "Grammar Practice",
+        grammarType: "2ND CONDITIONAL",
+        text: "If I had known about the unexpected traffic delays on the highway, I would have taken the train.",
         difficulty: "Advanced"
       },
       {
-        id: "yt-01-jobs",
-        title: "Steve Jobs - Stanford Speech Clip",
+        id: "gram-02",
+        title: "Unbroken Project Effort",
+        type: "TTS",
+        category: "Grammar Practice",
+        grammarType: "PRESENT PERFECT PROGRESSIVE",
+        text: "She has been working tirelessly on her research project since last Tuesday.",
+        difficulty: "Intermediate"
+      },
+      {
+        id: "gram-03",
+        title: "Future Travel Plans",
+        type: "TTS",
+        category: "Grammar Practice",
+        grammarType: "FUTURO GOING TO",
+        text: "We are going to travel to Kyoto next winter to experience the traditional gardens.",
+        difficulty: "Beginner"
+      },
+      {
+        id: "gram-04",
+        title: "Habitual Office Work",
+        type: "TTS",
+        category: "Grammar Practice",
+        grammarType: "SIMPLE PRESENT",
+        text: "He usually practices the piano for two hours every single day after finishing school.",
+        difficulty: "Beginner"
+      },
+      {
+        id: "gram-05",
+        title: "The Chef's Secret Recipe",
+        type: "TTS",
+        category: "Grammar Practice",
+        grammarType: "SIMPLE PRESENT 3RD PERSON",
+        text: "She bakes a fresh loaf of sourdough bread every morning before the sun rises.",
+        difficulty: "Beginner"
+      },
+      {
+        id: "story-01",
+        title: "The Golden Bird Pathway",
+        type: "TTS",
+        category: "Stories",
+        text: "Deep within the ancient forest, a small golden bird guarded a secret path that only opened at midnight.",
+        difficulty: "Intermediate"
+      },
+      {
+        id: "story-02",
+        title: "The Reverse Clockmaker",
+        type: "TTS",
+        category: "Stories",
+        text: "Once upon a time, an old clockmaker realized his clocks were ticking backward, reversing five minutes every day.",
+        difficulty: "Intermediate"
+      },
+      {
+        id: "yt-01",
+        title: "Steve Jobs - Visionary Limits",
         type: "YOUTUBE",
+        category: "YouTube Clips",
         text: "Your time is limited, so don't waste it living someone else's life.",
         difficulty: "Beginner",
         videoId: "UF8uR6Z6KLc",
@@ -478,25 +605,163 @@
         endTime: 45
       },
       {
-        id: "yt-02-gaiman",
-        title: "Neil Gaiman on Making Mistakes",
+        id: "yt-02",
+        title: "Carl Sagan - Pale Blue Dot Spot",
         type: "YOUTUBE",
-        text: "I hope that in this coming year, you make mistakes. Because if you are making mistakes, you are making new things.",
-        difficulty: "Intermediate",
-        videoId: "g2bM-eS3pYI",
-        startTime: 12,
-        endTime: 21
-      },
-      {
-        id: "yt-03-sagan",
-        title: "Carl Sagan - Pale Blue Dot",
-        type: "YOUTUBE",
-        text: "Look again at that dot. That's here. That's home. That's us. On it everyone you love lived out their lives.",
+        category: "YouTube Clips",
+        text: "Look again at that dot. That's here. That's home. That's us.",
         difficulty: "Advanced",
         videoId: "GO5FwsblpT8",
         startTime: 15,
         endTime: 27
+      },
+      {
+        id: "spell-01",
+        title: "Registering Customer Name",
+        type: "TTS",
+        category: "Spelling",
+        text: "My name is Arthur, spelled A-R-T-H-U-R, and my last name is Cunningham, spelled C-U-N-N-I-N-G-H-A-M.",
+        difficulty: "Beginner"
+      },
+      {
+        id: "spell-02",
+        title: "Academic Term spelling",
+        type: "TTS",
+        category: "Spelling",
+        text: "Please spell the word conscientious, which is C-O-N-S-C-I-E-N-T-I-O-U-S.",
+        difficulty: "Intermediate"
+      },
+      {
+        id: "addr-01",
+        title: "Midwest Shipping Address",
+        type: "TTS",
+        category: "Addresses",
+        text: "The package must be delivered to one-two-three-four North Maple Avenue, Suite five-hundred, Chicago, Illinois.",
+        difficulty: "Intermediate"
+      },
+      {
+        id: "addr-02",
+        title: "London Head Office Location",
+        type: "TTS",
+        category: "Addresses",
+        text: "Our headquarters are located at forty-five Broad Street, Apartment three-B, London, England.",
+        difficulty: "Beginner"
+      },
+      {
+        id: "phone-01",
+        title: "Corporate Helpline Access",
+        type: "TTS",
+        category: "Phone Numbers",
+        text: "You can reach our customer support department directly at area code two-one-two, five-five-five, zero-one-nine-nine.",
+        difficulty: "Beginner"
+      },
+      {
+        id: "phone-02",
+        title: "Emergency Outpost Hotlines",
+        type: "TTS",
+        category: "Phone Numbers",
+        text: "In case of an urgent emergency, call plus-one, eight-hundred, four-four-three, nine-one-one-zero immediately.",
+        difficulty: "Intermediate"
+      },
+      {
+        id: "info-01",
+        title: "New Guest Registry Log",
+        type: "TTS",
+        category: "Personal Information",
+        text: "Her name is Sarah Miller, she lives at seven-two Oak Road, and her telephone number is five-five-five, zero-one-two-three.",
+        difficulty: "Beginner"
+      },
+      {
+        id: "info-02",
+        title: "Digital Client Account Record",
+        type: "TTS",
+        category: "Personal Information",
+        text: "Please record the guest's email: robert-dot-jones-at-email-dot-com, born on October fourteenth, nineteen-ninety.",
+        difficulty: "Intermediate"
+      },
+      {
+        id: "speech-01",
+        title: "Everyday Reductions Practice",
+        type: "TTS",
+        category: "Connected Speech",
+        text: "I'm gonna try to find out what he's wanna do after we link up at the coffee shop.",
+        difficulty: "Intermediate"
+      },
+      {
+        id: "speech-02",
+        title: "Conversational Elision Waves",
+        type: "TTS",
+        category: "Connected Speech",
+        text: "What do you want to do about the issue? I don't know, but we should've done something earlier.",
+        difficulty: "Advanced"
+      },
+      {
+        id: "price-01",
+        title: "Detailed Financial Settlement",
+        type: "TTS",
+        category: "Critical Prices",
+        text: "The total invoice amount comes to exactly three thousand, four hundred and fifty dollars and seventy-five cents.",
+        difficulty: "Beginner"
+      },
+      {
+        id: "price-02",
+        title: "Quarterly Revenue Variance Report",
+        type: "TTS",
+        category: "Critical Prices",
+        text: "Our quarterly revenue dropped by twelve-point-five percent, resulting in a net loss of forty-five thousand Euros.",
+        difficulty: "Intermediate"
+      },
+      {
+        id: "nav-01",
+        title: "Street Directions Layout",
+        type: "TTS",
+        category: "Directions & Navigation",
+        text: "Go straight for two blocks, turn left onto Grand Avenue, and the museum will be on your right, next to the bank.",
+        difficulty: "Beginner"
+      },
+      {
+        id: "nav-02",
+        title: "Expressway Roundabout Guide",
+        type: "TTS",
+        category: "Directions & Navigation",
+        text: "At the roundabout, take the third exit onto Highway eighty, then stay in the left lane to exit toward downtown.",
+        difficulty: "Intermediate"
       }
+    ];
+
+    // --- CATEGORÍAS DISPONIBLES ---
+    const CATEGORIES = [
+      "Todas",
+      "Grammar Practice",
+      "Stories",
+      "YouTube Clips",
+      "Spelling",
+      "Addresses",
+      "Phone Numbers",
+      "Personal Information",
+      "Connected Speech",
+      "Critical Prices",
+      "Directions & Navigation"
+    ];
+
+    // --- LISTA EXACTA DE TIEMPOS GRAMATICALES REQUERIDOS ---
+    const GRAMMAR_TYPES = [
+      "FUTURO GOING TO",
+      "FUTURO WILL",
+      "SIMPLE PRESENT",
+      "SIMPLE PRESENT 3RD PERSON",
+      "SIMPLE PAST",
+      "PAST PROGRESSIVE",
+      "SHOULD - COULD - WOULD",
+      "MAY - MIGHT",
+      "MUST - NEED TO - HAVE TO",
+      "COMPARATIVES",
+      "SUPERLATIVES",
+      "2ND CONDITIONAL",
+      "REPORTED SPEECH",
+      "PRESENT PERFECT",
+      "PAST PERFECT",
+      "PRESENT PERFECT PROGRESSIVE"
     ];
 
     // --- 2. SERVICIO DE PERSISTENCIA (StorageService) ---
@@ -506,14 +771,14 @@
         const data = localStorage.getItem(STORAGE_KEY);
         return data ? JSON.parse(data) : {};
       },
-      saveLessonProgress(lessonId, score, completed = true) {
+      saveLessonProgress(lessonId, score, completed = true, userAttempt = "") {
         const progress = this.getProgress();
-        // Guardar solo si es mayor o igual a la puntuación previa
         const prevScore = progress[lessonId] ? progress[lessonId].score : 0;
         if (score >= prevScore) {
           progress[lessonId] = {
             completed: completed || (score === 100),
             score: score,
+            userAttempt: userAttempt,
             updatedAt: new Date().toISOString()
           };
           localStorage.setItem(STORAGE_KEY, JSON.stringify(progress));
@@ -527,14 +792,9 @@
     // --- 3. SERVICIO DE VALIDACIÓN (DiffService) ---
     const DiffService = {
       cleanWord(word) {
-        // Convierte a minúsculas y elimina signos de puntuación comunes para una comparación lingüística pura
         return word.toLowerCase().replace(/[.,\/#!$%\^&\*;:{}=\-_`~()?"'¡¿“”’]/g, "").trim();
       },
 
-      /**
-       * Calcula la diferencia detallada palabra por palabra usando un algoritmo similar a Levenshtein.
-       * Retorna una lista de operaciones que reconstruye el texto esperado basándose en lo digitado.
-       */
       computeWordDiff(expectedArr, actualArr) {
         const n = expectedArr.length;
         const m = actualArr.length;
@@ -551,15 +811,14 @@
               dp[i][j] = dp[i - 1][j - 1];
             } else {
               dp[i][j] = Math.min(
-                dp[i - 1][j] + 1,    // Eliminación / Missing
-                dp[i][j - 1] + 1,    // Inserción / Extra
-                dp[i - 1][j - 1] + 1 // Sustitución / Incorrecto
+                dp[i - 1][j] + 1,    // Eliminación
+                dp[i][j - 1] + 1,    // Inserción
+                dp[i - 1][j - 1] + 1 // Sustitución
               );
             }
           }
         }
 
-        // Backtracking para obtener el mapeo de operaciones
         let i = n, j = m;
         const ops = [];
         while (i > 0 || j > 0) {
@@ -614,13 +873,12 @@
     let ytLoopInterval = null;
     let isYoutubeApiReady = false;
 
-    // Callback obligatorio de la API de YouTube
     function onYouTubeIframeAPIReady() {
       isYoutubeApiReady = true;
     }
 
     const AudioService = {
-      type: 'TTS', // 'TTS' o 'YOUTUBE'
+      type: 'TTS',
       activeLesson: null,
       isPlaying: false,
       speed: 0.9,
@@ -644,7 +902,6 @@
         const container = document.getElementById('youtube-player-container');
         container.classList.remove('hidden');
 
-        // Si ya hay un player de YouTube, simplemente lo cargamos con el nuevo ID
         if (ytPlayer && typeof ytPlayer.loadVideoById === 'function') {
           try {
             ytPlayer.cueVideoById({
@@ -659,7 +916,6 @@
           return;
         }
 
-        // Crear instancia del reproductor
         if (isYoutubeApiReady) {
           try {
             ytPlayer = new YT.Player('youtube-player', {
@@ -679,7 +935,6 @@
               events: {
                 'onReady': (event) => {
                   event.target.setPlaybackRate(parseFloat(this.speed));
-                  // Silenciar inicialmente para evitar sorpresas o reproducir en bucle manual
                 },
                 'onStateChange': (event) => {
                   if (event.data === YT.PlayerState.ENDED && this.loop) {
@@ -735,14 +990,11 @@
         } else if (this.type === 'YOUTUBE' && ytPlayer && typeof ytPlayer.seekTo === 'function') {
           clearInterval(ytLoopInterval);
           
-          // Ajustar velocidad
           ytPlayer.setPlaybackRate(parseFloat(this.speed));
-          // Buscar segundo inicial
           ytPlayer.seekTo(this.activeLesson.startTime, true);
           ytPlayer.playVideo();
           document.dispatchEvent(new CustomEvent('audioStateChanged', { detail: { isPlaying: true } }));
 
-          // Intervalo de ciclo para controlar el tiempo final exacto
           ytLoopInterval = setInterval(() => {
             try {
               const current = ytPlayer.getCurrentTime();
@@ -778,7 +1030,6 @@
 
       replay5() {
         if (this.type === 'TTS') {
-          // TTS no se puede retroceder de forma nativa por segmentos fácilmente, se repite desde el inicio
           this.play();
         } else if (this.type === 'YOUTUBE' && ytPlayer && typeof ytPlayer.getCurrentTime === 'function') {
           const current = ytPlayer.getCurrentTime();
@@ -793,7 +1044,6 @@
       setSpeed(newSpeed) {
         this.speed = newSpeed;
         if (this.isPlaying) {
-          // Reiniciar para aplicar velocidad o aplicar dinámicamente si es YT
           if (this.type === 'YOUTUBE' && ytPlayer && typeof ytPlayer.setPlaybackRate === 'function') {
             ytPlayer.setPlaybackRate(parseFloat(newSpeed));
           } else {
@@ -813,15 +1063,26 @@
       // Estado Interno
       let activeLesson = null;
       let activeFilter = 'all';
+      let activeCategory = 'Todas';
       let searchQuery = '';
+      let remainingAttempts = 5; // Variable global de intentos por lección
+      let activeGrammarType = null; // Subcategoría de tiempo gramatical activa
+
+      // Pantallas Principales
+      const welcomeScreen = document.getElementById('welcome-screen');
+      const practiceScreen = document.getElementById('practice-screen');
+      const btnStartPractice = document.getElementById('btn-start-practice');
+      const btnLogoHome = document.getElementById('btn-logo-home');
       
       // Selectores DOM
       const lessonsListContainer = document.getElementById('lessons-list');
+      const categoryTabsContainer = document.getElementById('category-tabs');
       const lessonSearchInput = document.getElementById('lesson-search');
       const difficultyFiltersContainer = document.getElementById('difficulty-filters');
       const workspaceContainer = document.getElementById('workspace-container');
       const noLessonState = document.getElementById('no-lesson-state');
       const activeLessonTitle = document.getElementById('active-lesson-title');
+      const lessonCategoryTag = document.getElementById('lesson-category-tag');
       const lessonTypeBadge = document.getElementById('lesson-type-badge');
       const lessonDifficultyBadge = document.getElementById('lesson-difficulty-badge');
       const completionStatusBadge = document.getElementById('completion-status-badge');
@@ -849,6 +1110,7 @@
       // Feedback
       const feedbackPanel = document.getElementById('feedback-panel');
       const feedbackAccuracyScore = document.getElementById('feedback-accuracy-score');
+      const feedbackScoreLabel = document.getElementById('feedback-score-label');
       const feedbackWordContainer = document.getElementById('feedback-word-container');
 
       // Stats Drawer
@@ -891,9 +1153,11 @@
           window.speechSynthesis.onvoiceschanged = populateTtsVoices;
         }
         
+        renderCategoryTabs();
         renderLessons();
         updateGlobalStats();
         setupEventListeners();
+        setupWelcomeScreen();
         lucide.createIcons();
       }
 
@@ -901,7 +1165,6 @@
       function populateTtsVoices() {
         if (typeof window.speechSynthesis === 'undefined') return;
         const voices = window.speechSynthesis.getVoices();
-        // Filtrar voces exclusivas de inglés
         const englishVoices = voices.filter(v => v.lang.startsWith('en'));
         
         selectTtsVoice.innerHTML = '<option value="auto">Por defecto (Sistema)</option>';
@@ -913,27 +1176,182 @@
         });
       }
 
-      // --- RENDERIZADO DE LECCIONES LATERALES ---
+      // --- CONFIGURACIÓN DE PANTALLA DE BIENVENIDA ---
+      function setupWelcomeScreen() {
+        // Clic en el botón principal para comenzar práctica general
+        btnStartPractice.addEventListener('click', () => {
+          welcomeScreen.classList.add('hidden');
+          practiceScreen.classList.remove('hidden');
+          if (!activeLesson && LESSONS_DATABASE.length > 0) {
+            selectLesson(LESSONS_DATABASE[0]);
+          }
+        });
+
+        // Clic en el logo del header para regresar a Bienvenida
+        btnLogoHome.addEventListener('click', () => {
+          AudioService.stop();
+          practiceScreen.classList.add('hidden');
+          welcomeScreen.classList.remove('hidden');
+        });
+
+        // Clic en las tarjetas de categorías de la bienvenida
+        document.querySelectorAll('[data-welcome-cat]').forEach(card => {
+          card.addEventListener('click', () => {
+            const cat = card.getAttribute('data-welcome-cat');
+            activeCategory = cat;
+            activeGrammarType = null; // Reajustar subnivel
+            renderCategoryTabs();
+            renderLessons();
+            
+            welcomeScreen.classList.add('hidden');
+            practiceScreen.classList.remove('hidden');
+            
+            if (cat === "Grammar Practice") {
+              // Si es Grammar, deja que el usuario elija su subtema gramatical directamente
+              noLessonState.classList.remove('hidden');
+              noLessonState.classList.remove('opacity-0');
+            } else {
+              // Autoseleccionar primera lección disponible de esa categoría
+              const filtered = LESSONS_DATABASE.filter(l => l.category === cat);
+              if (filtered.length > 0) {
+                selectLesson(filtered[0]);
+              } else {
+                noLessonState.classList.remove('hidden');
+                noLessonState.classList.remove('opacity-0');
+              }
+            }
+          });
+        });
+      }
+
+      // --- RENDERIZADO DE LAS PESTAÑAS HORIZONTALES ---
+      function renderCategoryTabs() {
+        categoryTabsContainer.innerHTML = '';
+        
+        CATEGORIES.forEach(cat => {
+          const btn = document.createElement('button');
+          btn.type = 'button';
+          btn.className = `text-[11px] px-3.5 py-1.5 rounded-full font-medium transition-all cursor-pointer whitespace-nowrap inline-block`;
+          
+          if (cat === activeCategory) {
+            btn.className += ` bg-japandi-accent text-white shadow-sm`;
+          } else {
+            btn.className += ` border border-japandi-border text-japandi-text/70 bg-white hover:bg-japandi-accentLight/60`;
+          }
+          
+          btn.textContent = cat;
+          btn.addEventListener('click', () => {
+            activeCategory = cat;
+            activeGrammarType = null; // Reajustar subnivel gramatical
+            renderCategoryTabs();
+            renderLessons();
+          });
+
+          categoryTabsContainer.appendChild(btn);
+        });
+      }
+
+      // --- RENDERIZADO DE LECCIONES LATERALES (Menú de Tiempos Integrado) ---
       function renderLessons() {
         lessonsListContainer.innerHTML = '';
         const progress = StorageService.getProgress();
 
+        // 1. Placeholder Dinámico del buscador e indicadores
+        if (activeCategory === 'Grammar Practice') {
+          if (activeGrammarType) {
+            lessonSearchInput.placeholder = `Buscar en ${activeGrammarType}...`;
+          } else {
+            lessonSearchInput.placeholder = "Buscar tema gramatical...";
+          }
+        } else {
+          lessonSearchInput.placeholder = "Buscar lección...";
+        }
+
+        // 2. Interceptación de menú de subcategorías en Grammar Practice
+        if (activeCategory === 'Grammar Practice' && activeGrammarType === null) {
+          const filteredGrammarTypes = GRAMMAR_TYPES.filter(type => 
+            type.toLowerCase().includes(searchQuery.toLowerCase())
+          );
+
+          lessonsCountBadge.textContent = `${filteredGrammarTypes.length} temas`;
+
+          if (filteredGrammarTypes.length === 0) {
+            lessonsListContainer.innerHTML = `
+              <div class="text-center py-8 text-japandi-text/40">
+                <i data-lucide="info" class="w-8 h-8 mx-auto mb-2 opacity-50"></i>
+                <p class="text-xs">No se encontraron temas gramaticales.</p>
+              </div>
+            `;
+            lucide.createIcons();
+            return;
+          }
+
+          filteredGrammarTypes.forEach(type => {
+            // Contar lecciones disponibles bajo este subtema
+            const lessonCount = LESSONS_DATABASE.filter(l => 
+              l.category === "Grammar Practice" && l.grammarType === type
+            ).length;
+
+            const card = document.createElement('div');
+            card.className = "border border-japandi-border bg-white hover:border-japandi-accent hover:bg-japandi-accentLight/30 rounded-xl p-3.5 cursor-pointer transition-all mb-2 flex items-center justify-between";
+            card.innerHTML = `
+              <div class="flex flex-col">
+                <span class="text-xs font-semibold text-japandi-text uppercase tracking-wider">${type}</span>
+                <span class="text-[10px] text-japandi-text/40 mt-0.5">${lessonCount} ${lessonCount === 1 ? 'ejercicio' : 'ejercicios'} disponibles</span>
+              </div>
+              <i data-lucide="chevron-right" class="w-4 h-4 text-japandi-accent/50"></i>
+            `;
+
+            card.addEventListener('click', () => {
+              activeGrammarType = type;
+              searchQuery = ''; // Limpiar buscador tras ingresar
+              lessonSearchInput.value = '';
+              renderLessons();
+            });
+
+            lessonsListContainer.appendChild(card);
+          });
+
+          lucide.createIcons();
+          return;
+        }
+
+        // 3. Renderizado normal para el resto de categorías o subcategorías gramaticales
         const filtered = LESSONS_DATABASE.filter(lesson => {
           const matchesSearch = lesson.title.toLowerCase().includes(searchQuery.toLowerCase()) || 
                                 lesson.text.toLowerCase().includes(searchQuery.toLowerCase());
           const matchesDifficulty = activeFilter === 'all' || lesson.difficulty === activeFilter;
-          return matchesSearch && matchesDifficulty;
+          const matchesCategory = activeCategory === 'Todas' || lesson.category === activeCategory;
+          const matchesGrammarType = activeCategory !== 'Grammar Practice' || lesson.grammarType === activeGrammarType;
+
+          return matchesSearch && matchesDifficulty && matchesCategory && matchesGrammarType;
         });
 
         lessonsCountBadge.textContent = `${filtered.length} lecciones`;
 
+        // Botón de retorno al menú gramatical
+        if (activeCategory === 'Grammar Practice' && activeGrammarType !== null) {
+          const backBtn = document.createElement('button');
+          backBtn.id = 'btn-back-grammar';
+          backBtn.className = "w-full mb-3 flex items-center justify-center gap-2 py-2 px-3 text-xs font-semibold text-japandi-accent border border-japandi-border rounded-xl bg-japandi-accentLight hover:bg-japandi-accentLight/80 transition-colors";
+          backBtn.innerHTML = `<i data-lucide="arrow-left" class="w-3.5 h-3.5"></i> Volver a temas`;
+          backBtn.addEventListener('click', () => {
+            activeGrammarType = null;
+            searchQuery = '';
+            lessonSearchInput.value = '';
+            renderLessons();
+          });
+          lessonsListContainer.appendChild(backBtn);
+        }
+
         if (filtered.length === 0) {
-          lessonsListContainer.innerHTML = `
-            <div class="text-center py-8 text-japandi-text/40">
-              <i data-lucide="info" class="w-8 h-8 mx-auto mb-2 opacity-50"></i>
-              <p class="text-xs">No se encontraron lecciones.</p>
-            </div>
+          const emptyDiv = document.createElement('div');
+          emptyDiv.className = "text-center py-8 text-japandi-text/40";
+          emptyDiv.innerHTML = `
+            <i data-lucide="info" class="w-8 h-8 mx-auto mb-2 opacity-50"></i>
+            <p class="text-xs">No hay ejercicios aún para esta subcategoría.</p>
           `;
+          lessonsListContainer.appendChild(emptyDiv);
           lucide.createIcons();
           return;
         }
@@ -966,9 +1384,14 @@
             <p class="text-xs text-japandi-text/50 line-clamp-2 italic">"${lesson.text}"</p>
 
             <div class="flex items-center justify-between mt-1 pt-2 border-t border-japandi-border/40">
-              <div class="flex items-center gap-1.5">
-                <span class="text-[9px] font-bold tracking-widest uppercase text-japandi-text/40">${lesson.type}</span>
-                <span class="text-[9px] font-semibold border px-1.5 py-0.5 rounded ${difficultyColors[lesson.difficulty]}">${lesson.difficulty}</span>
+              <div class="flex flex-col items-start gap-1">
+                <span class="text-[9px] font-bold text-japandi-accent/80 tracking-tight">
+                  ${lesson.category}${lesson.grammarType ? ' > ' + lesson.grammarType : ''}
+                </span>
+                <div class="flex items-center gap-1.5 mt-0.5">
+                  <span class="text-[9px] font-bold tracking-widest uppercase text-japandi-text/40">${lesson.type}</span>
+                  <span class="text-[9px] font-semibold border px-1.5 py-0.5 rounded ${difficultyColors[lesson.difficulty]}">${lesson.difficulty}</span>
+                </div>
               </div>
               ${score > 0 ? `<span class="text-[10px] font-semibold text-japandi-accent">${score}% prec.</span>` : ''}
             </div>
@@ -986,12 +1409,19 @@
         AudioService.stop();
         activeLesson = lesson;
         
+        // Estricto restablecimiento de intentos al cargar la lección
+        remainingAttempts = 5;
+        dictationInput.removeAttribute('disabled');
+        dictationInput.classList.remove('opacity-60');
+        dictationInput.placeholder = "Escucha atentamente el fragmento y escribe lo que oyes aquí... ¡Tienes 5 intentos para lograr la transcripción perfecta!";
+
         // Quitar estado vacío si es la primera vez
         noLessonState.classList.add('opacity-0');
         setTimeout(() => noLessonState.classList.add('hidden'), 300);
 
         // Actualizar UI activa
         activeLessonTitle.textContent = lesson.title;
+        lessonCategoryTag.textContent = lesson.category + (lesson.grammarType ? ' > ' + lesson.grammarType : '');
         lessonTypeBadge.textContent = lesson.type;
         lessonDifficultyBadge.textContent = lesson.difficulty;
         
@@ -1029,7 +1459,7 @@
         if (progress[lesson.id]?.completed) {
           completionStatusBadge.classList.remove('hidden');
           completionStatusBadge.classList.add('inline-flex');
-          dictationInput.value = progress[lesson.id].userAttempt || ''; // Opcional, si guardamos texto
+          dictationInput.value = progress[lesson.id].userAttempt || '';
         } else {
           completionStatusBadge.classList.add('hidden');
           completionStatusBadge.classList.remove('inline-flex');
@@ -1138,7 +1568,6 @@
 
         // Atajos de Teclado
         document.addEventListener('keydown', (e) => {
-          // Desactivar atajo global si está en inputs que no sean el dictation
           if (e.key === 'Escape' && activeLesson) {
             e.preventDefault();
             btnAudioPlay.click();
@@ -1172,7 +1601,7 @@
           showToast(`Pista (Palabra contenida): "${hintWord}"`, 'warning');
         });
 
-        // BOTÓN DE VERIFICACIÓN (NÚCLEO DEL DICTADO)
+        // BOTÓN DE VERIFICACIÓN
         btnActionVerify.addEventListener('click', () => {
           verifyDictation();
         });
@@ -1215,7 +1644,7 @@
 
       // --- MÉTODOS DE LOGICA DE NEGOCIO ---
 
-      // Acción de Verificación
+      // Acción de Verificación (Gestión de 5 Intentos)
       function verifyDictation() {
         if (!activeLesson) return;
         
@@ -1230,47 +1659,102 @@
         const expectedWords = activeLesson.text.trim().split(/\s+/);
         const actualWords = userText.split(/\s+/);
 
-        // Ejecutar algoritmo Levenshtein palabra por palabra
+        // Algoritmo Levenshtein palabra por palabra
         const diffResults = DiffService.computeWordDiff(expectedWords, actualWords);
 
         // Calcular porcentaje de acierto
         const totalExpected = expectedWords.length;
         const correctCount = diffResults.filter(r => r.type === 'correct').length;
-        
-        // Puntuación de precisión
         const accuracyScore = Math.round((correctCount / totalExpected) * 100);
 
-        // Guardar progreso localmente
-        const completed = accuracyScore >= 90; // Completado con 90% o más
-        StorageService.saveLessonProgress(activeLesson.id, accuracyScore, completed);
+        // Escenario de Éxito Directo (100% de precisión)
+        if (accuracyScore === 100) {
+          StorageService.saveLessonProgress(activeLesson.id, 100, true, userText);
+          renderFeedbackVisuals(diffResults, 100);
+          updateGlobalStats();
+          renderLessons();
 
-        // Renderizar Feedback Visual
-        renderFeedbackVisuals(diffResults, accuracyScore);
-
-        // Actualizar estadísticas rápidas
-        updateGlobalStats();
-        renderLessons();
-
-        // Mostrar Badge de estado activo
-        if (completed) {
           completionStatusBadge.classList.remove('hidden');
           completionStatusBadge.classList.add('inline-flex');
-        }
 
-        // Efecto especial si logra puntuación perfecta 100%
-        if (accuracyScore === 100) {
           showToast("¡Impecable! 100% de precisión alcanzada.", "success");
           triggerConfetti();
-        } else if (accuracyScore >= 80) {
-          showToast(`¡Buen trabajo! Precisión del ${accuracyScore}%`, "success");
+          return;
+        }
+
+        // Si la precisión es menor a 100%, restamos un intento
+        remainingAttempts--;
+
+        if (remainingAttempts > 0) {
+          // Render de máscara y ocultación selectiva
+          renderMaskedFeedback(diffResults);
+          
+          // Actualizar placeholder de textarea
+          dictationInput.placeholder = `Intento incorrecto. Te quedan ${remainingAttempts} intentos para corregir...`;
+          
+          showToast(`Respuesta incorrecta. Te quedan ${remainingAttempts} intentos. ¡Sigue intentándolo!`, 'warning');
         } else {
-          showToast(`Verificación lista. Precisión: ${accuracyScore}%`, "info");
+          // 0 intentos restantes: Congelar input y revelar solución final
+          dictationInput.setAttribute('disabled', 'true');
+          dictationInput.classList.add('opacity-60');
+          dictationInput.placeholder = "Se agotaron los intentos. Selecciona otra lección o reinicia tu progreso.";
+
+          // Guardar el progreso con la puntuación real obtenida
+          const completed = accuracyScore >= 90; // Completado si alcanza 90%+ al final
+          StorageService.saveLessonProgress(activeLesson.id, accuracyScore, completed, userText);
+          
+          // Mostrar feedback completo original
+          renderFeedbackVisuals(diffResults, accuracyScore);
+          updateGlobalStats();
+          renderLessons();
+
+          if (completed) {
+            completionStatusBadge.classList.remove('hidden');
+            completionStatusBadge.classList.add('inline-flex');
+          }
+
+          showToast(`Has agotado tus 5 intentos. Puntuación de precisión final: ${accuracyScore}%`, 'incorrect');
         }
       }
 
-      // Render de las palabras coloreadas del Diff
+      // Renderiza una versión enmascarada del dictado sin revelar el desglose exacto de palabras
+      function renderMaskedFeedback(diffResults) {
+        feedbackPanel.classList.remove('hidden');
+        feedbackScoreLabel.textContent = "Intentos:";
+        feedbackAccuracyScore.textContent = `${remainingAttempts} restantes`;
+        feedbackAccuracyScore.className = "font-bold text-lg text-japandi-warning animate-bounce";
+
+        feedbackWordContainer.innerHTML = '';
+
+        diffResults.forEach(item => {
+          const span = document.createElement('span');
+          span.className = 'px-1.5 py-0.5 rounded select-none transition-transform hover:scale-105 inline-block';
+          
+          if (item.type === 'correct') {
+            span.classList.add('bg-japandi-correctBg', 'text-japandi-correct', 'border', 'border-japandi-correctBorder');
+            span.textContent = item.expected;
+            span.title = "Acierto";
+          } else {
+            // Palabras incorrectas, omitidas o extras se reemplazan por asteriscos (*)
+            span.classList.add('bg-japandi-accentLight', 'text-japandi-accent/40', 'border', 'border-japandi-border');
+            
+            // Determinar la longitud aproximada de la palabra para mantener pista espacial
+            const referenceWord = item.expected || item.actual || "word";
+            const cleanWord = DiffService.cleanWord(referenceWord);
+            const asterisksLength = Math.max(cleanWord.length, 3);
+            
+            span.textContent = "*".repeat(asterisksLength);
+            span.title = "Discrepancia aquí (Modifica tu texto)";
+          }
+
+          feedbackWordContainer.appendChild(span);
+        });
+      }
+
+      // Render de las palabras coloreadas del Diff completo (Revelación final o acierto absoluto)
       function renderFeedbackVisuals(diffResults, accuracyScore) {
         feedbackPanel.classList.remove('hidden');
+        feedbackScoreLabel.textContent = "Precisión:";
         feedbackAccuracyScore.textContent = `${accuracyScore}%`;
 
         // Modificar clases del contenedor según precisión
@@ -1297,7 +1781,6 @@
             span.textContent = item.expected;
             span.title = `Escribiste: "${item.actual || 'N/A'}" • Esperado: "${item.expected}"`;
             
-            // Añadir click para ver detalle en un tooltip personalizado rápido o toast
             span.addEventListener('click', () => {
               showToast(`Error: Esperabas "${item.expected}" pero escribiste "${item.actual || 'vacío'}"`, 'incorrect');
             });
@@ -1350,15 +1833,12 @@
 
         const avgAccuracy = completedCount > 0 ? Math.round(accumAccuracy / Object.keys(progress).length) : 0;
 
-        // Actualizar Navbar
         statCompletedNav.textContent = `${completedCount}/${totalLessons}`;
         statAccuracyNav.textContent = `${avgAccuracy}%`;
 
-        // Actualizar Drawer
         statsTotalCompleted.textContent = completedCount;
         statsAvgAccuracy.textContent = `${avgAccuracy}%`;
 
-        // Barras por nivel
         const renderLevelStat = (levelName, elements) => {
           const l = levels[levelName];
           elements.text.textContent = `${l.completed} / ${l.total}`;
@@ -1370,7 +1850,6 @@
         renderLevelStat('Intermediate', { text: statsLevelIntermediate, bar: barLevelIntermediate });
         renderLevelStat('Advanced', { text: statsLevelAdvanced, bar: barLevelAdvanced });
 
-        // Listado de historial reciente
         statsRecentList.innerHTML = '';
         const sortedHistory = Object.entries(progress)
           .sort((a, b) => new Date(b[1].updatedAt) - new Date(a[1].updatedAt))
@@ -1428,12 +1907,10 @@
         container.appendChild(toast);
         lucide.createIcons();
 
-        // Transición de entrada
         setTimeout(() => {
           toast.classList.remove('translate-y-2', 'opacity-0');
         }, 10);
 
-        // Descartar tras 4 segundos
         const timer = setTimeout(() => dismiss(), 4000);
 
         function dismiss() {
@@ -1447,7 +1924,6 @@
         });
       }
 
-      // Exponer showToast a nivel global de manera segura para accesibilidad desde AudioService
       window.showToast = showToast;
 
       // --- SISTEMA DE MODAL CONFIRMACIÓN ---
