@@ -6,7 +6,7 @@
  * la misma estructura de propiedades.
  */
 
-const LESSONS_DATABASE = 
+const LESSONS_DATABASE = [
   {
     id: "gram-01",
     title: "Conditional Intent",
@@ -203,9 +203,8 @@ const LESSONS_DATABASE =
     text: "Go straight for two blocks, turn left onto Grand Avenue, and the museum will be on your right, next to the bank.",
     difficulty: "Beginner"
   },
-  [
   {
-    id: "gram-01",
+    id: "gram-06",
     title: "Tonight Movie Plans",
     type: "TTS",
     category: "Grammar Practice",
@@ -214,7 +213,7 @@ const LESSONS_DATABASE =
     difficulty: "Beginner"
   },
   {
-    id: "gram-02",
+    id: "gram-07",
     title: "Missed Cooking Class",
     type: "TTS",
     category: "Grammar Practice",
@@ -223,7 +222,7 @@ const LESSONS_DATABASE =
     difficulty: "Beginner"
   },
   {
-    id: "gram-03",
+    id: "gram-08",
     title: "Weekend Soccer Match",
     type: "TTS",
     category: "Grammar Practice",
@@ -232,7 +231,7 @@ const LESSONS_DATABASE =
     difficulty: "Beginner"
   },
   {
-    id: "gram-04",
+    id: "gram-09",
     title: "New Modern Guitar",
     type: "TTS",
     category: "Grammar Practice",
@@ -241,7 +240,7 @@ const LESSONS_DATABASE =
     difficulty: "Beginner"
   },
   {
-    id: "gram-05",
+    id: "gram-10",
     title: "Skipped Gym Session",
     type: "TTS",
     category: "Grammar Practice",
@@ -250,7 +249,7 @@ const LESSONS_DATABASE =
     difficulty: "Beginner"
   },
   {
-    id: "gram-06",
+    id: "gram-11",
     title: "Next Summer Vacation",
     type: "TTS",
     category: "Grammar Practice",
@@ -259,7 +258,7 @@ const LESSONS_DATABASE =
     difficulty: "Beginner"
   },
   {
-    id: "gram-07",
+    id: "gram-12",
     title: "Morning Room Cleanup",
     type: "TTS",
     category: "Grammar Practice",
@@ -268,7 +267,7 @@ const LESSONS_DATABASE =
     difficulty: "Beginner"
   },
   {
-    id: "gram-08",
+    id: "gram-13",
     title: "Cancelled Park Picnic",
     type: "TTS",
     category: "Grammar Practice",
@@ -277,7 +276,7 @@ const LESSONS_DATABASE =
     difficulty: "Beginner"
   },
   {
-    id: "gram-09",
+    id: "gram-14",
     title: "Upcoming English Exam",
     type: "TTS",
     category: "Grammar Practice",
@@ -286,7 +285,7 @@ const LESSONS_DATABASE =
     difficulty: "Beginner"
   },
   {
-    id: "gram-10",
+    id: "gram-15",
     title: "Early Bedtime Routine",
     type: "TTS",
     category: "Grammar Practice",
