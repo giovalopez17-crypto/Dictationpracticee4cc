@@ -390,5 +390,5 @@ const LESSONS_DATABASE = [
     grammarType: "FUTURO GOING TO",
     text: "My family is going to rent a beautiful cabin near the lake this summer.",
     difficulty: "Intermediate"
-  },
+  }
 ];
