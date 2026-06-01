@@ -6,7 +6,7 @@
  * la misma estructura de propiedades.
  */
 
-const LESSONS_DATABASE = [
+const LESSONS_DATABASE = 
   {
     id: "gram-01",
     title: "Conditional Intent",
@@ -293,8 +293,7 @@ const LESSONS_DATABASE = [
     grammarType: "FUTURO GOING TO",
     text: "He is going to sleep very early tonight.",
     difficulty: "Beginner"
-  }
-],
+  },
   {
     id: "nav-02",
     title: "Expressway Roundabout Guide",
