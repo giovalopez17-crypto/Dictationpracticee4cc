@@ -301,4 +301,94 @@ const LESSONS_DATABASE = [
     text: "At the roundabout, take the third exit onto Highway eighty, then stay in the left lane to exit toward downtown.",
     difficulty: "Intermediate"
   }
+  {
+    id: "gram-01",
+    title: "International Marketing Strategy",
+    type: "TTS",
+    category: "Grammar Practice",
+    grammarType: "FUTURO GOING TO",
+    text: "Our marketing team is going to launch the new campaign next Monday morning.",
+    difficulty: "Intermediate"
+  },
+  {
+    id: "gram-02",
+    title: "Postponed Renovation Project",
+    type: "TTS",
+    category: "Grammar Practice",
+    grammarType: "FUTURO GOING TO",
+    text: "They are not going to renovate the old office building until next year.",
+    difficulty: "Intermediate"
+  },
+  {
+    id: "gram-03",
+    title: "Corporate Budget Meeting",
+    type: "TTS",
+    category: "Grammar Practice",
+    grammarType: "FUTURO GOING TO",
+    text: "Is the financial director going to present the annual budget during the meeting?",
+    difficulty: "Intermediate"
+  },
+  {
+    id: "gram-04",
+    title: "Advanced Coding Course",
+    type: "TTS",
+    category: "Grammar Practice",
+    grammarType: "FUTURO GOING TO",
+    text: "He is going to enroll in an intensive web development bootcamp next month.",
+    difficulty: "Intermediate"
+  },
+  {
+    id: "gram-05",
+    title: "Cancelled Flight Alternative",
+    type: "TTS",
+    category: "Grammar Practice",
+    grammarType: "FUTURO GOING TO",
+    text: "We are not going to book the flights because the prices increased dramatically.",
+    difficulty: "Intermediate"
+  },
+  {
+    id: "gram-06",
+    title: "Keynote Speech Inquiry",
+    type: "TTS",
+    category: "Grammar Practice",
+    grammarType: "FUTURO GOING TO",
+    text: "Are you going to attend the international technology conference in San Francisco?",
+    difficulty: "Intermediate"
+  },
+  {
+    id: "gram-07",
+    title: "Healthy Lifestyle Habits",
+    type: "TTS",
+    category: "Grammar Practice",
+    grammarType: "FUTURO GOING TO",
+    text: "She is going to change her daily diet and start exercising regularly soon.",
+    difficulty: "Intermediate"
+  },
+  {
+    id: "gram-08",
+    title: "Declined Job Offer",
+    type: "TTS",
+    category: "Grammar Practice",
+    grammarType: "FUTURO GOING TO",
+    text: "I am not going to accept that job offer due to the low salary.",
+    difficulty: "Intermediate"
+  },
+  {
+    id: "gram-09",
+    title: "Local Charity Event",
+    type: "TTS",
+    category: "Grammar Practice",
+    grammarType: "FUTURO GOING TO",
+    text: "Is your local community going to organize a charity event for the hospital?",
+    difficulty: "Intermediate"
+  },
+  {
+    id: "gram-10",
+    title: "Family Vacation Plan",
+    type: "TTS",
+    category: "Grammar Practice",
+    grammarType: "FUTURO GOING TO",
+    text: "My family is going to rent a beautiful cabin near the lake this summer.",
+    difficulty: "Intermediate"
+  },
 ];
