@@ -390,5 +390,95 @@ const LESSONS_DATABASE = [
     grammarType: "FUTURO GOING TO",
     text: "My family is going to rent a beautiful cabin near the lake this summer.",
     difficulty: "Intermediate"
-  }
+  },
+  {
+    id: "gram-01",
+    title: "Strategic Corporate Merger",
+    type: "TTS",
+    category: "Grammar Practice",
+    grammarType: "FUTURO GOING TO",
+    text: "The multinational corporation is going to acquire three struggling tech startups to expand its regional market share significantly.",
+    difficulty: "Advanced"
+  },
+  {
+    id: "gram-02",
+    title: "Unresolved Infrastructure Delay",
+    type: "TTS",
+    category: "Grammar Practice",
+    grammarType: "FUTURO GOING TO",
+    text: "The local government is not going to approve the budget for the new highway system until environmental studies are completed.",
+    difficulty: "Advanced"
+  },
+  {
+    id: "gram-03",
+    title: "Artificial Intelligence Debate",
+    type: "TTS",
+    category: "Grammar Practice",
+    grammarType: "FUTURO GOING TO",
+    text: "Are the lead software developers going to implement advanced artificial intelligence modules to automate these repetitive quality assurance processes?",
+    difficulty: "Advanced"
+  },
+  {
+    id: "gram-04",
+    title: "Academic Research Publication",
+    type: "TTS",
+    category: "Grammar Practice",
+    grammarType: "FUTURO GOING TO",
+    text: "She is going to present her groundbreaking scientific research regarding renewable energy sources at the upcoming international academic symposium.",
+    difficulty: "Advanced"
+  },
+  {
+    id: "gram-05",
+    title: "Severe Weather Precautions",
+    type: "TTS",
+    category: "Grammar Practice",
+    grammarType: "FUTURO GOING TO",
+    text: "We are not going to risk traveling through the mountain passes while the severe winter blizzard warnings remain active.",
+    difficulty: "Advanced"
+  },
+  {
+    id: "gram-06",
+    title: "Macroeconomic Policy Shift",
+    type: "TTS",
+    category: "Grammar Practice",
+    grammarType: "FUTURO GOING TO",
+    text: "Is the central bank going to raise interest rates again next quarter to combat the rising inflation affecting consumer goods?",
+    difficulty: "Advanced"
+  },
+  {
+    id: "gram-07",
+    title: "Sustainable Agriculture Shift",
+    type: "TTS",
+    category: "Grammar Practice",
+    grammarType: "FUTURO GOING TO",
+    text: "Independent local farmers are going to adopt vertical farming techniques to maximize crop yields while drastically reducing water consumption.",
+    difficulty: "Advanced"
+  },
+  {
+    id: "gram-08",
+    title: "Declined Investment Venture",
+    type: "TTS",
+    category: "Grammar Practice",
+    grammarType: "FUTURO GOING TO",
+    text: "I am not going to invest my personal savings into that volatile cryptocurrency project without seeing a detailed risk assessment.",
+    difficulty: "Advanced"
+  },
+  {
+    id: "gram-09",
+    title: "Organizational Restructuring Inquiry",
+    type: "TTS",
+    category: "Grammar Practice",
+    grammarType: "FUTURO GOING TO",
+    text: "How is the senior management team going to handle the sudden resignation of our chief operating officer during this crisis?",
+    difficulty: "Advanced"
+  },
+  {
+    id: "gram-10",
+    title: "Architectural Urban Design",
+    type: "TTS",
+    category: "Grammar Practice",
+    grammarType: "FUTURO GOING TO",
+    text: "The renowned architectural firm is going to design a modern minimalist museum that blends seamlessly into the historic city center.",
+    difficulty: "Advanced"
+  },
 ];
