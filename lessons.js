@@ -203,6 +203,98 @@ const LESSONS_DATABASE = [
     text: "Go straight for two blocks, turn left onto Grand Avenue, and the museum will be on your right, next to the bank.",
     difficulty: "Beginner"
   },
+  [
+  {
+    id: "gram-01",
+    title: "Tonight Movie Plans",
+    type: "TTS",
+    category: "Grammar Practice",
+    grammarType: "FUTURO GOING TO",
+    text: "I am going to watch a movie tonight.",
+    difficulty: "Beginner"
+  },
+  {
+    id: "gram-02",
+    title: "Missed Cooking Class",
+    type: "TTS",
+    category: "Grammar Practice",
+    grammarType: "FUTURO GOING TO",
+    text: "She is not going to cook dinner today.",
+    difficulty: "Beginner"
+  },
+  {
+    id: "gram-03",
+    title: "Weekend Soccer Match",
+    type: "TTS",
+    category: "Grammar Practice",
+    grammarType: "FUTURO GOING TO",
+    text: "Are they going to play soccer this weekend?",
+    difficulty: "Beginner"
+  },
+  {
+    id: "gram-04",
+    title: "New Modern Guitar",
+    type: "TTS",
+    category: "Grammar Practice",
+    grammarType: "FUTURO GOING TO",
+    text: "He is going to buy a new guitar.",
+    difficulty: "Beginner"
+  },
+  {
+    id: "gram-05",
+    title: "Skipped Gym Session",
+    type: "TTS",
+    category: "Grammar Practice",
+    grammarType: "FUTURO GOING TO",
+    text: "We are not going to visit the gym.",
+    difficulty: "Beginner"
+  },
+  {
+    id: "gram-06",
+    title: "Next Summer Vacation",
+    type: "TTS",
+    category: "Grammar Practice",
+    grammarType: "FUTURO GOING TO",
+    text: "Are you going to travel next summer holiday?",
+    difficulty: "Beginner"
+  },
+  {
+    id: "gram-07",
+    title: "Morning Room Cleanup",
+    type: "TTS",
+    category: "Grammar Practice",
+    grammarType: "FUTURO GOING TO",
+    text: "They are going to clean the house tomorrow.",
+    difficulty: "Beginner"
+  },
+  {
+    id: "gram-08",
+    title: "Cancelled Park Picnic",
+    type: "TTS",
+    category: "Grammar Practice",
+    grammarType: "FUTURO GOING TO",
+    text: "I am not going to eat fast food.",
+    difficulty: "Beginner"
+  },
+  {
+    id: "gram-09",
+    title: "Upcoming English Exam",
+    type: "TTS",
+    category: "Grammar Practice",
+    grammarType: "FUTURO GOING TO",
+    text: "Is she going to study for the test?",
+    difficulty: "Beginner"
+  },
+  {
+    id: "gram-10",
+    title: "Early Bedtime Routine",
+    type: "TTS",
+    category: "Grammar Practice",
+    grammarType: "FUTURO GOING TO",
+    text: "He is going to sleep very early tonight.",
+    difficulty: "Beginner"
+  }
+],
   {
     id: "nav-02",
     title: "Expressway Roundabout Guide",
