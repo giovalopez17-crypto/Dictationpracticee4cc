@@ -274,7 +274,7 @@
             <!-- Cabecera de Lección -->
             <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-japandi-border">
               <div>
-                <div class="flex items-center gap-2 mb-1">
+                <div class="flex items-center gap-2 mb-1 animate-pulse">
                   <span id="lesson-category-tag" class="text-[10px] bg-japandi-accent text-white font-semibold uppercase tracking-wider px-2 py-0.5 rounded-md">Categoría</span>
                   <span id="lesson-type-badge" class="text-[10px] font-semibold uppercase tracking-wider px-2 py-0.5 rounded-md">TTS</span>
                   <span id="lesson-difficulty-badge" class="text-[10px] font-semibold uppercase tracking-wider px-2 py-0.5 rounded-md">Beginner</span>
@@ -1014,7 +1014,6 @@
             practiceScreen.classList.remove('hidden');
             
             if (cat === "Grammar Practice") {
-              // Si es Grammar, deja que el usuario elija su subtema gramatical directamente
               noLessonState.classList.remove('hidden');
               noLessonState.classList.remove('opacity-0');
             } else {
@@ -1830,5 +1829,4 @@
     });
   </script>
 </body>
-</html>
 </html>
