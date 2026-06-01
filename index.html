@@ -26,21 +26,21 @@
           },
           colors: {
             japandi: {
-              bg: '#FBF9F6',       /* Alabastro cálido / Washi */
-              card: '#FFFFFF',
-              border: '#EBE6DD',   /* Arena suave */
-              text: '#2C2A29',     /* Carbón orgánico */
-              accent: '#8C7A6B',   /* Arcilla / Madera natural */
-              accentHover: '#766558',
-              accentLight: '#F3EFEA',
+              bg: '#122c47',       /* Azul oscuro principal */
+              card: '#1a3554',     /* Azul un poco más claro para las tarjetas */
+              border: '#24456b',   /* Azul grisáceo para los bordes */
+              text: '#FBF9F6',     /* Alabastro para el texto */
+              accent: '#e9521d',   /* Naranja vibrante */
+              accentHover: '#c74b1b', /* Marrón terracota */
+              accentLight: '#24456b', /* Azul suave para detalles */
               correct: '#4A6B53',  /* Verde Musgo */
-              correctBg: '#EEF4F0',
-              correctBorder: '#D4E4D8',
+              correctBg: '#1e3c27',
+              correctBorder: '#2d5b3b',
               incorrect: '#A65B5B',/* Terracota */
-              incorrectBg: '#FAF0F0',
-              incorrectBorder: '#F0D5D5',
-              warning: '#B88C4B',  /* Ocre */
-              warningBg: '#FCF8F0',
+              incorrectBg: '#3d1f1f',
+              incorrectBorder: '#5c2d2d',
+              warning: '#d3781c',  /* Ocre */
+              warningBg: '#3d2812',
             }
           }
         }
@@ -50,20 +50,20 @@
 
   <style>
     body {
-      background-color: #FBF9F6;
-      color: #2C2A29;
-      background-image: radial-gradient(#EBE6DD 1px, transparent 1px);
+      background-color: #122c47;
+      color: #FBF9F6;
+      background-image: radial-gradient(#24456b 1px, transparent 1px);
       background-size: 24px 24px;
     }
     .custom-scrollbar::-webkit-scrollbar {
       width: 6px;
     }
     .custom-scrollbar::-webkit-scrollbar-track {
-      background: #F3EFEA;
+      background: #1a3554;
       border-radius: 8px;
     }
     .custom-scrollbar::-webkit-scrollbar-thumb {
-      background: #8C7A6B;
+      background: #e9521d;
       border-radius: 8px;
     }
     /* Scrollbar delgada y elegante para las pestañas de categorías */
@@ -71,17 +71,17 @@
       height: 4px;
     }
     #category-tabs::-webkit-scrollbar-track {
-      background: #F3EFEA;
+      background: #1a3554;
       border-radius: 4px;
     }
     #category-tabs::-webkit-scrollbar-thumb {
-      background: #8C7A6B;
+      background: #e9521d;
       border-radius: 4px;
     }
     textarea:focus {
       outline: none;
-      border-color: #8C7A6B;
-      box-shadow: 0 0 0 3px rgba(140, 122, 107, 0.15);
+      border-color: #e9521d;
+      box-shadow: 0 0 0 3px rgba(233, 82, 29, 0.15);
     }
     /* Estilo para las transiciones */
     .fade-in {
@@ -104,14 +104,14 @@
       <h3 class="font-serif text-xl font-bold mb-2 text-japandi-text" id="confirm-title">¿Estás seguro?</h3>
       <p class="text-japandi-text/70 text-sm mb-6" id="confirm-message">Esta acción no se puede deshacer.</p>
       <div class="flex justify-end gap-3">
-        <button id="confirm-btn-cancel" class="px-4 py-2 border border-japandi-border text-sm rounded-lg hover:bg-japandi-accentLight transition-colors">Cancelar</button>
+        <button id="confirm-btn-cancel" class="px-4 py-2 border border-japandi-border text-sm rounded-lg hover:bg-japandi-accentLight transition-colors text-japandi-text">Cancelar</button>
         <button id="confirm-btn-ok" class="px-4 py-2 bg-japandi-accent text-white text-sm rounded-lg hover:bg-japandi-accentHover transition-colors">Confirmar</button>
       </div>
     </div>
   </div>
 
   <!-- ENCABEZADO -->
-  <header class="border-b border-japandi-border bg-white/70 backdrop-blur-md sticky top-0 z-30">
+  <header class="border-b border-japandi-border bg-japandi-card/70 backdrop-blur-md sticky top-0 z-30">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
       <div class="flex items-center gap-3 cursor-pointer select-none" id="btn-logo-home" title="Ir a Bienvenida">
         <div class="w-9 h-9 rounded-lg bg-japandi-accent flex items-center justify-center text-white shadow-sm">
@@ -119,7 +119,6 @@
         </div>
         <div>
           <h1 class="font-serif text-lg sm:text-xl font-semibold tracking-tight text-japandi-text">Daily Dictation</h1>
-          <p class="text-[10px] sm:text-xs text-japandi-accent font-medium tracking-widest uppercase">Estética Japandi</p>
         </div>
       </div>
       
@@ -160,42 +159,42 @@
 
       <!-- Rejilla de Accesos Directos por Categorías -->
       <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 w-full mb-10">
-        <div data-welcome-cat="Grammar Practice" class="bg-white border border-japandi-border rounded-xl p-5 text-left cursor-pointer hover:border-japandi-accent hover:shadow-sm hover:scale-[1.01] transition-all flex items-start gap-3">
+        <div data-welcome-cat="Grammar Practice" class="bg-japandi-card border border-japandi-border rounded-xl p-5 text-left cursor-pointer hover:border-japandi-accent hover:shadow-sm hover:scale-[1.01] transition-all flex items-start gap-3">
           <div class="p-2 bg-japandi-accentLight text-japandi-accent rounded-lg"><i data-lucide="book-open" class="w-5 h-5"></i></div>
           <div>
             <h4 class="font-serif font-bold text-sm text-japandi-text">Grammar Practice</h4>
             <p class="text-[11px] text-japandi-text/50 mt-1">Domina tiempos verbales y sintaxis precisa.</p>
           </div>
         </div>
-        <div data-welcome-cat="Stories" class="bg-white border border-japandi-border rounded-xl p-5 text-left cursor-pointer hover:border-japandi-accent hover:shadow-sm hover:scale-[1.01] transition-all flex items-start gap-3">
+        <div data-welcome-cat="Stories" class="bg-japandi-card border border-japandi-border rounded-xl p-5 text-left cursor-pointer hover:border-japandi-accent hover:shadow-sm hover:scale-[1.01] transition-all flex items-start gap-3">
           <div class="p-2 bg-japandi-accentLight text-japandi-accent rounded-lg"><i data-lucide="feather" class="w-5 h-5"></i></div>
           <div>
             <h4 class="font-serif font-bold text-sm text-japandi-text">Stories</h4>
             <p class="text-[11px] text-japandi-text/50 mt-1">Dictados narrativos de cuentos cortos.</p>
           </div>
         </div>
-        <div data-welcome-cat="YouTube Clips" class="bg-white border border-japandi-border rounded-xl p-5 text-left cursor-pointer hover:border-japandi-accent hover:shadow-sm hover:scale-[1.01] transition-all flex items-start gap-3">
+        <div data-welcome-cat="YouTube Clips" class="bg-japandi-card border border-japandi-border rounded-xl p-5 text-left cursor-pointer hover:border-japandi-accent hover:shadow-sm hover:scale-[1.01] transition-all flex items-start gap-3">
           <div class="p-2 bg-japandi-accentLight text-japandi-accent rounded-lg"><i data-lucide="video" class="w-5 h-5"></i></div>
           <div>
             <h4 class="font-serif font-bold text-sm text-japandi-text">YouTube Clips</h4>
             <p class="text-[11px] text-japandi-text/50 mt-1">Escucha fragmentos de discursos históricos.</p>
           </div>
         </div>
-        <div data-welcome-cat="Spelling" class="bg-white border border-japandi-border rounded-xl p-5 text-left cursor-pointer hover:border-japandi-accent hover:shadow-sm hover:scale-[1.01] transition-all flex items-start gap-3">
+        <div data-welcome-cat="Spelling" class="bg-japandi-card border border-japandi-border rounded-xl p-5 text-left cursor-pointer hover:border-japandi-accent hover:shadow-sm hover:scale-[1.01] transition-all flex items-start gap-3">
           <div class="p-2 bg-japandi-accentLight text-japandi-accent rounded-lg"><i data-lucide="spell-check" class="w-5 h-5"></i></div>
           <div>
             <h4 class="font-serif font-bold text-sm text-japandi-text">Spelling</h4>
             <p class="text-[11px] text-japandi-text/50 mt-1">Deletreo de nombres letra a letra.</p>
           </div>
         </div>
-        <div data-welcome-cat="Connected Speech" class="bg-white border border-japandi-border rounded-xl p-5 text-left cursor-pointer hover:border-japandi-accent hover:shadow-sm hover:scale-[1.01] transition-all flex items-start gap-3">
+        <div data-welcome-cat="Connected Speech" class="bg-japandi-card border border-japandi-border rounded-xl p-5 text-left cursor-pointer hover:border-japandi-accent hover:shadow-sm hover:scale-[1.01] transition-all flex items-start gap-3">
           <div class="p-2 bg-japandi-accentLight text-japandi-accent rounded-lg"><i data-lucide="waveform" class="w-5 h-5"></i></div>
           <div>
             <h4 class="font-serif font-bold text-sm text-japandi-text">Connected Speech</h4>
             <p class="text-[11px] text-japandi-text/50 mt-1">Reducciones de voz naturales en inglés fluido.</p>
           </div>
         </div>
-        <div data-welcome-cat="Critical Prices" class="bg-white border border-japandi-border rounded-xl p-5 text-left cursor-pointer hover:border-japandi-accent hover:shadow-sm hover:scale-[1.01] transition-all flex items-start gap-3">
+        <div data-welcome-cat="Critical Prices" class="bg-japandi-card border border-japandi-border rounded-xl p-5 text-left cursor-pointer hover:border-japandi-accent hover:shadow-sm hover:scale-[1.01] transition-all flex items-start gap-3">
           <div class="p-2 bg-japandi-accentLight text-japandi-accent rounded-lg"><i data-lucide="dollar-sign" class="w-5 h-5"></i></div>
           <div>
             <h4 class="font-serif font-bold text-sm text-japandi-text">Critical Prices</h4>
@@ -215,7 +214,7 @@
       
       <!-- PANEL DE LECCIONES (IZQUIERDA) -->
       <section class="lg:col-span-4 flex flex-col gap-6">
-        <div class="bg-white border border-japandi-border rounded-2xl p-5 shadow-sm flex flex-col h-[580px]">
+        <div class="bg-japandi-card border border-japandi-border rounded-2xl p-5 shadow-sm flex flex-col h-[580px]">
           <!-- Cabecera de Lecciones -->
           <div class="mb-4">
             <div class="flex items-center justify-between mb-3">
@@ -232,14 +231,14 @@
             <div class="flex flex-col gap-2">
               <div class="relative">
                 <i data-lucide="search" class="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-japandi-text/40"></i>
-                <input type="text" id="lesson-search" placeholder="Buscar lección..." class="w-full text-xs pl-9 pr-3 py-2 border border-japandi-border rounded-lg focus:outline-none focus:border-japandi-accent focus:ring-2 focus:ring-japandi-accent/10">
+                <input type="text" id="lesson-search" placeholder="Buscar lección..." class="w-full text-xs pl-9 pr-3 py-2 border border-japandi-border bg-japandi-bg text-japandi-text rounded-lg focus:outline-none focus:border-japandi-accent focus:ring-2 focus:ring-japandi-accent/10">
               </div>
               
               <div class="flex gap-1 overflow-x-auto pb-1" id="difficulty-filters">
                 <button data-filter="all" class="text-[11px] px-3 py-1 rounded-full bg-japandi-accent text-white font-medium transition-colors cursor-pointer whitespace-nowrap">Todas</button>
-                <button data-filter="Beginner" class="text-[11px] px-3 py-1 rounded-full border border-japandi-border text-japandi-text/70 font-medium hover:bg-japandi-accentLight transition-colors cursor-pointer whitespace-nowrap">Básico</button>
-                <button data-filter="Intermediate" class="text-[11px] px-3 py-1 rounded-full border border-japandi-border text-japandi-text/70 font-medium hover:bg-japandi-accentLight transition-colors cursor-pointer whitespace-nowrap">Intermedio</button>
-                <button data-filter="Advanced" class="text-[11px] px-3 py-1 rounded-full border border-japandi-border text-japandi-text/70 font-medium hover:bg-japandi-accentLight transition-colors cursor-pointer whitespace-nowrap">Avanzado</button>
+                <button data-filter="Beginner" class="text-[11px] px-3 py-1 rounded-full border border-japandi-border text-japandi-text/70 bg-japandi-card font-medium hover:bg-japandi-accentLight transition-colors cursor-pointer whitespace-nowrap">Básico</button>
+                <button data-filter="Intermediate" class="text-[11px] px-3 py-1 rounded-full border border-japandi-border text-japandi-text/70 bg-japandi-card font-medium hover:bg-japandi-accentLight transition-colors cursor-pointer whitespace-nowrap">Intermedio</button>
+                <button data-filter="Advanced" class="text-[11px] px-3 py-1 rounded-full border border-japandi-border text-japandi-text/70 bg-japandi-card font-medium hover:bg-japandi-accentLight transition-colors cursor-pointer whitespace-nowrap">Avanzado</button>
               </div>
             </div>
           </div>
@@ -255,10 +254,10 @@
       <section class="lg:col-span-8 flex flex-col gap-6">
         
         <!-- CARD PRINCIPAL DEL JUEGO -->
-        <div class="bg-white border border-japandi-border rounded-2xl p-6 sm:p-8 shadow-sm flex flex-col justify-between min-h-[580px] relative overflow-hidden" id="workspace-container">
+        <div class="bg-japandi-card border border-japandi-border rounded-2xl p-6 sm:p-8 shadow-sm flex flex-col justify-between min-h-[580px] relative overflow-hidden" id="workspace-container">
           
           <!-- Estado de no selección -->
-          <div id="no-lesson-state" class="absolute inset-0 bg-white z-20 flex flex-col items-center justify-center text-center p-6 transition-opacity duration-300">
+          <div id="no-lesson-state" class="absolute inset-0 bg-japandi-card z-20 flex flex-col items-center justify-center text-center p-6 transition-opacity duration-300">
             <div class="w-16 h-16 rounded-full bg-japandi-accentLight flex items-center justify-center text-japandi-accent mb-4">
               <i data-lucide="book-open" class="w-8 h-8"></i>
             </div>
@@ -305,10 +304,10 @@
                   <button id="btn-audio-play" class="w-12 h-12 rounded-full bg-japandi-accent text-white hover:bg-japandi-accentHover flex items-center justify-center transition-all shadow-md focus:outline-none" title="Reproducir/Pausar (Atajo: Esc)">
                     <i data-lucide="play" class="w-5 h-5" id="play-icon"></i>
                   </button>
-                  <button id="btn-audio-replay-5" class="p-2 border border-japandi-border rounded-lg bg-white hover:bg-japandi-accentLight transition-colors text-japandi-accent" title="Retroceder 5 segundos">
+                  <button id="btn-audio-replay-5" class="p-2 border border-japandi-border rounded-lg bg-japandi-card hover:bg-japandi-accentLight transition-colors text-japandi-accent" title="Retroceder 5 segundos">
                     <i data-lucide="rotate-ccw" class="w-4 h-4"></i>
                   </button>
-                  <button id="btn-audio-stop" class="p-2 border border-japandi-border rounded-lg bg-white hover:bg-japandi-accentLight transition-colors text-japandi-accent" title="Detener reproducción">
+                  <button id="btn-audio-stop" class="p-2 border border-japandi-border rounded-lg bg-japandi-card hover:bg-japandi-accentLight transition-colors text-japandi-accent" title="Detener reproducción">
                     <i data-lucide="square" class="w-4 h-4"></i>
                   </button>
                 </div>
@@ -325,7 +324,7 @@
                   <!-- Selector de Velocidad (Velocidades) -->
                   <div class="flex items-center gap-2 border-l border-japandi-border pl-4">
                     <span class="font-medium">Velocidad:</span>
-                    <select id="select-audio-speed" class="bg-white border border-japandi-border rounded px-2 py-1 text-xs focus:outline-none focus:border-japandi-accent">
+                    <select id="select-audio-speed" class="bg-japandi-bg text-japandi-text border border-japandi-border rounded px-2 py-1 text-xs focus:outline-none focus:border-japandi-accent">
                       <option value="0.7">0.7x (Lento)</option>
                       <option value="0.8">0.8x</option>
                       <option value="0.9" selected>0.9x (Recomendado)</option>
@@ -337,13 +336,13 @@
                   <!-- Selector de Voces (Solo TTS) -->
                   <div id="tts-voice-wrapper" class="flex items-center gap-2 border-l border-japandi-border pl-4">
                     <span class="font-medium"><i data-lucide="globe" class="w-3.5 h-3.5 inline"></i> Voz:</span>
-                    <select id="select-tts-voice" class="bg-white border border-japandi-border rounded px-2 py-1 text-xs focus:outline-none focus:border-japandi-accent max-w-[120px]">
+                    <select id="select-tts-voice" class="bg-japandi-bg text-japandi-text border border-japandi-border rounded px-2 py-1 text-xs focus:outline-none focus:border-japandi-accent max-w-[120px]">
                       <option value="auto">Por defecto</option>
                     </select>
                   </div>
 
                   <!-- Mostrar Video (Solo YouTube) -->
-                  <button id="btn-toggle-video" class="hidden items-center gap-1 text-xs border border-japandi-border bg-white px-2.5 py-1 rounded hover:bg-japandi-accentLight transition-colors">
+                  <button id="btn-toggle-video" class="hidden items-center gap-1 text-xs border border-japandi-border bg-japandi-card px-2.5 py-1 rounded hover:bg-japandi-accentLight transition-colors">
                     <i data-lucide="eye" class="w-3.5 h-3.5"></i> <span>Ver Video</span>
                   </button>
                 </div>
@@ -358,7 +357,7 @@
                 <span id="char-word-count">0 caracteres | 0 palabras</span>
               </div>
               
-              <textarea id="dictation-input" rows="4" class="w-full border border-japandi-border rounded-xl p-4 text-base leading-relaxed bg-japandi-bg font-mono transition-all resize-none custom-scrollbar" placeholder="Escucha atentamente el fragmento y escribe lo que oyes aquí... ¡Tienes 5 intentos para lograr la transcripción perfecta!"></textarea>
+              <textarea id="dictation-input" rows="4" class="w-full border border-japandi-border rounded-xl p-4 text-base leading-relaxed bg-japandi-bg text-japandi-text font-mono transition-all resize-none custom-scrollbar" placeholder="Escucha atentamente el fragmento y escribe lo que oyes aquí... ¡Tienes 5 intentos para lograr la transcripción perfecta!"></textarea>
               
               <p class="text-[11px] text-japandi-text/40 italic flex items-center gap-1">
                 <i data-lucide="keyboard" class="w-3.5 h-3.5"></i> Atajos: <kbd class="bg-japandi-accentLight px-1 rounded border">Esc</kbd> Reproducir/Pausar • <kbd class="bg-japandi-accentLight px-1 rounded border">Ctrl + Enter</kbd> Verificar
@@ -429,14 +428,14 @@
   </main>
 
   <!-- PANEL FLOTANTE DE ESTADÍSTICAS DETALLADAS -->
-  <aside id="stats-drawer" class="fixed right-0 top-0 h-full w-full max-w-sm bg-white border-l border-japandi-border shadow-2xl z-40 transform translate-x-full transition-transform duration-300 ease-in-out flex flex-col justify-between">
+  <aside id="stats-drawer" class="fixed right-0 top-0 h-full w-full max-w-sm bg-japandi-card border-l border-japandi-border shadow-2xl z-40 transform translate-x-full transition-transform duration-300 ease-in-out flex flex-col justify-between">
     <div class="p-6 overflow-y-auto custom-scrollbar flex-grow">
       <div class="flex items-center justify-between pb-4 border-b border-japandi-border mb-6">
         <div class="flex items-center gap-2">
           <i data-lucide="award" class="w-5 h-5 text-japandi-accent"></i>
-          <h2 class="font-serif text-xl font-bold">Tu Progreso</h2>
+          <h2 class="font-serif text-xl font-bold text-japandi-text">Tu Progreso</h2>
         </div>
-        <button id="btn-stats-close" class="p-1 hover:bg-japandi-accentLight rounded transition-colors">
+        <button id="btn-stats-close" class="p-1 hover:bg-japandi-accentLight rounded transition-colors text-japandi-text">
           <i data-lucide="x" class="w-5 h-5"></i>
         </button>
       </div>
@@ -445,11 +444,11 @@
       <div class="grid grid-cols-2 gap-4 mb-6">
         <div class="bg-japandi-bg p-4 rounded-xl text-center border border-japandi-border">
           <span class="text-[10px] uppercase font-bold text-japandi-text/50 tracking-wider">Completadas</span>
-          <p id="stats-total-completed" class="text-2xl font-serif font-semibold mt-1">0</p>
+          <p id="stats-total-completed" class="text-2xl font-serif font-semibold mt-1 text-japandi-text">0</p>
         </div>
         <div class="bg-japandi-bg p-4 rounded-xl text-center border border-japandi-border">
           <span class="text-[10px] uppercase font-bold text-japandi-text/50 tracking-wider">Precisión Media</span>
-          <p id="stats-avg-accuracy" class="text-2xl font-serif font-semibold mt-1">0%</p>
+          <p id="stats-avg-accuracy" class="text-2xl font-serif font-semibold mt-1 text-japandi-text">0%</p>
         </div>
       </div>
 
@@ -459,7 +458,7 @@
         
         <!-- Básico -->
         <div>
-          <div class="flex justify-between text-xs mb-1">
+          <div class="flex justify-between text-xs mb-1 text-japandi-text">
             <span>Básico (Beginner)</span>
             <span id="stats-level-beginner">0 / 0</span>
           </div>
@@ -470,7 +469,7 @@
 
         <!-- Intermedio -->
         <div>
-          <div class="flex justify-between text-xs mb-1">
+          <div class="flex justify-between text-xs mb-1 text-japandi-text">
             <span>Intermedio (Intermediate)</span>
             <span id="stats-level-intermediate">0 / 0</span>
           </div>
@@ -481,7 +480,7 @@
 
         <!-- Avanzado -->
         <div>
-          <div class="flex justify-between text-xs mb-1">
+          <div class="flex justify-between text-xs mb-1 text-japandi-text">
             <span>Avanzado (Advanced)</span>
             <span id="stats-level-advanced">0 / 0</span>
           </div>
@@ -510,7 +509,7 @@
   </aside>
 
   <!-- PIE DE PÁGINA -->
-  <footer class="border-t border-japandi-border bg-white py-6 mt-12 text-center text-xs text-japandi-text/50">
+  <footer class="border-t border-japandi-border bg-japandi-card py-6 mt-12 text-center text-xs text-japandi-text/50">
     <div class="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-4">
       <p>© 2026 Daily Dictation App. Hecho para la excelencia del inglés.</p>
       <div class="flex gap-4">
@@ -533,9 +532,74 @@
   <script src="lessons.js"></script>
 
   <script>
-    // --- CONFIGURACIÓN DE CATEGORÍAS Y TIEMPOS GRAMATICALES ---
-    // LESSONS_DATABASE ya no está aquí porque se carga de forma global desde el archivo lessons.js
-    
+    // --- AUTOCURACIÓN Y VALIDACIÓN PREVIA DE LA BASE DE DATOS ---
+    document.addEventListener('DOMContentLoaded', () => {
+      // Lecciones de demostración integradas por si lessons.js falta o tiene problemas de carga
+      const fallbackLessons = [
+        {
+          id: "gram-01-fallback",
+          title: "Conditional Intent",
+          type: "TTS",
+          category: "Grammar Practice",
+          grammarType: "2ND CONDITIONAL",
+          text: "If I had known about the unexpected traffic delays on the highway, I would have taken the train.",
+          difficulty: "Advanced"
+        },
+        {
+          id: "gram-02-fallback",
+          title: "Unbroken Project Effort",
+          type: "TTS",
+          category: "Grammar Practice",
+          grammarType: "PRESENT PERFECT PROGRESSIVE",
+          text: "She has been working tirelessly on her research project since last Tuesday.",
+          difficulty: "Intermediate"
+        },
+        {
+          id: "story-01-fallback",
+          title: "The Golden Bird Pathway",
+          type: "TTS",
+          category: "Stories",
+          text: "Deep within the ancient forest, a small golden bird guarded a secret path that only opened at midnight.",
+          difficulty: "Intermediate"
+        },
+        {
+          id: "yt-01-fallback",
+          title: "Steve Jobs - Visionary Limits",
+          type: "YOUTUBE",
+          category: "YouTube Clips",
+          text: "Your time is limited, so don't waste it living someone else's life.",
+          difficulty: "Beginner",
+          videoId: "UF8uR6Z6KLc",
+          startTime: 40,
+          endTime: 45
+        }
+      ];
+
+      let database = null;
+      if (typeof LESSONS_DATABASE !== 'undefined' && Array.isArray(LESSONS_DATABASE)) {
+        database = LESSONS_DATABASE;
+      } else {
+        console.warn("Base de datos externa 'lessons.js' no inicializada. Usando lecciones de demostración integradas.");
+        database = fallbackLessons;
+      }
+
+      const usedIds = new Set();
+      database.forEach((lesson, index) => {
+        if (!lesson.id || usedIds.has(lesson.id)) {
+          let hash = 0;
+          const seed = (lesson.text || '') + (lesson.category || '') + index;
+          for (let i = 0; i < seed.length; i++) {
+            hash = (hash << 5) - hash + seed.charCodeAt(i);
+            hash |= 0;
+          }
+          lesson.id = `auto-${Math.abs(hash)}-${index}`;
+        }
+        usedIds.add(lesson.id);
+      });
+
+      window.LESSONS_DATABASE = database;
+    });
+
     // --- CATEGORÍAS DISPONIBLES ---
     const CATEGORIES = [
       "Todas",
@@ -867,6 +931,9 @@
     // --- 5. ORQUESTADOR CENTRAL DE LA APLICACIÓN (app.js) ---
     document.addEventListener('DOMContentLoaded', () => {
       
+      // Shadow de la variable global de base de datos para evitar ReferenceErrors si no existe
+      const LESSONS_DATABASE = window.LESSONS_DATABASE || [];
+
       // Estado Interno
       let activeLesson = null;
       let activeFilter = 'all';
@@ -1042,7 +1109,7 @@
           if (cat === activeCategory) {
             btn.className += ` bg-japandi-accent text-white shadow-sm`;
           } else {
-            btn.className += ` border border-japandi-border text-japandi-text/70 bg-white hover:bg-japandi-accentLight/60`;
+            btn.className += ` border border-japandi-border text-japandi-text/70 bg-japandi-card hover:bg-japandi-accentLight/60`;
           }
           
           btn.textContent = cat;
@@ -1099,7 +1166,7 @@
             ).length;
 
             const card = document.createElement('div');
-            card.className = "border border-japandi-border bg-white hover:border-japandi-accent hover:bg-japandi-accentLight/30 rounded-xl p-3.5 cursor-pointer transition-all mb-2 flex items-center justify-between";
+            card.className = "border border-japandi-border bg-japandi-card hover:border-japandi-accent hover:bg-japandi-accentLight/30 rounded-xl p-3.5 cursor-pointer transition-all mb-2 flex items-center justify-between";
             card.innerHTML = `
               <div class="flex flex-col">
                 <span class="text-xs font-semibold text-japandi-text uppercase tracking-wider">${type}</span>
@@ -1187,8 +1254,6 @@
               }
             </div>
             
-            <p class="text-xs text-japandi-text/50 line-clamp-2 italic">"${lesson.text}"</p>
-
             <div class="flex items-center justify-between mt-1 pt-2 border-t border-japandi-border/40">
               <div class="flex flex-col items-start gap-1">
                 <span class="text-[9px] font-bold text-japandi-accent/80 tracking-tight">
@@ -1297,7 +1362,7 @@
           if (!target) return;
           
           difficultyFiltersContainer.querySelectorAll('button').forEach(btn => {
-            btn.className = 'text-[11px] px-3 py-1 rounded-full border border-japandi-border text-japandi-text/70 font-medium hover:bg-japandi-accentLight transition-colors cursor-pointer whitespace-nowrap';
+            btn.className = 'text-[11px] px-3 py-1 rounded-full border border-japandi-border text-japandi-text/70 bg-japandi-card font-medium hover:bg-japandi-accentLight transition-colors cursor-pointer whitespace-nowrap';
           });
 
           target.className = 'text-[11px] px-3 py-1 rounded-full bg-japandi-accent text-white font-medium transition-colors cursor-pointer whitespace-nowrap';
@@ -1690,10 +1755,10 @@
         const toast = document.createElement('div');
         
         const colors = {
-          'success': 'bg-[#EEF4F0] text-[#4A6B53] border-[#D4E4D8]',
-          'warning': 'bg-[#FCF8F0] text-[#B88C4B] border-[#F3E6CE]',
-          'incorrect': 'bg-[#FAF0F0] text-[#A65B5B] border-[#F0D5D5]',
-          'info': 'bg-white text-japandi-text border-japandi-border'
+          'success': 'bg-japandi-correctBg text-japandi-correct border-japandi-correctBorder',
+          'warning': 'bg-japandi-warningBg text-japandi-warning border-japandi-border',
+          'incorrect': 'bg-japandi-incorrectBg text-japandi-incorrect border-japandi-incorrectBorder',
+          'info': 'bg-japandi-card text-japandi-text border-japandi-border'
         };
 
         const icons = {
