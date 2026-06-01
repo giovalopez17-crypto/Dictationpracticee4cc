@@ -481,4 +481,142 @@ const LESSONS_DATABASE = [
     text: "The renowned architectural firm is going to design a modern minimalist museum that blends seamlessly into the historic city center.",
     difficulty: "Advanced"
   },
+  {
+    id: "story-int-01",
+    title: "The Midnight Coffee Roastery",
+    type: "TTS",
+    category: "Stories",
+    difficulty: "Intermediate",
+    sentences: [
+      "The small downtown coffee shop had already closed its heavy wooden doors to the public.",
+      "However, the master roaster was still working hard beneath the warm, dim lights inside.",
+      "He had recently discovered a rare bean that required a very precise roasting temperature.",
+      "Although the process took hours, he successfully created the most aromatic blend of the year."
+    ]
+  },
+  {
+    id: "story-int-02",
+    title: "A Quiet Urban Sanctuary",
+    type: "TTS",
+    category: "Stories",
+    difficulty: "Intermediate",
+    sentences: [
+      "Elena decided to build a minimalist garden on the rooftop of her apartment building.",
+      "She wanted to create a peaceful sanctuary where corporate workers could escape daily stress.",
+      "After she had carefully arranged the green plants, a beautiful butterfly suddenly appeared.",
+      "Her clever project proved that nature can always find a home within busy cities."
+    ]
+  },
+  {
+    id: "story-int-03",
+    title: "The Digital Nomad Dilemma",
+    type: "TTS",
+    category: "Stories",
+    difficulty: "Intermediate",
+    sentences: [
+      "Liam had been working remotely from a tropical island for over six months.",
+      "While the beautiful ocean view was absolutely breathtaking, his internet connection remained quite unstable.",
+      "He should have upgraded his data plan before managing this critical software launch.",
+      "Fortunately, a local programmer helped him find a reliable connection just in time."
+    ]
+  },
+  {
+    id: "story-int-04",
+    title: "Echoes of Ancient Stars",
+    type: "TTS",
+    category: "Stories",
+    difficulty: "Intermediate",
+    sentences: [
+      "The dedicated research team spent the entire night monitoring the deep space telescope.",
+      "They were searching for a specific rhythmic pattern that indicated an undiscovered planet.",
+      "Suddenly, an unusual acoustic signal echoed loudly through the main control room speakers.",
+      "They immediately realized that their scientific understanding of the galaxy would change forever."
+    ]
+  },
+  {
+    id: "story-int-05",
+    title: "The Clockmaker Secret Legacy",
+    type: "TTS",
+    category: "Stories",
+    difficulty: "Intermediate",
+    sentences: [
+      "An old craftsman left an elegant silver pocket watch to his brilliant granddaughter.",
+      "The mysterious device had not been ticking properly for at least three decades.",
+      "When she gently turned the internal gold gear, a hidden compartment suddenly opened.",
+      "Inside, she discovered a beautifully detailed map leading to a forgotten historical library."
+    ]
+  },
+  {
+    id: "story-int-06",
+    title: "The Architecture of Sound",
+    type: "TTS",
+    category: "Stories",
+    difficulty: "Intermediate",
+    sentences: [
+      "An innovative architect wanted to design a concert hall with perfect natural acoustics.",
+      "She experimented with curved wooden panels that could naturally reflect soft musical notes.",
+      "Although critics doubted her unusual layout, the opening night performance was a triumph.",
+      "The audience completely agreed that the sound quality surpassed any traditional venue."
+    ]
+  },
+  {
+    id: "story-int-07",
+    title: "The Silent Canvas Exhibition",
+    type: "TTS",
+    category: "Stories",
+    difficulty: "Intermediate",
+    sentences: [
+      "A talented local artist decided to paint a collection using only monochromatic colors.",
+      "He believed that removing vibrant shades would allow viewers to focus on deep textures.",
+      "Many gallery visitors stood silently for minutes, deeply moved by the powerful shadows.",
+      "His bold artistic choice successfully demonstrated that simplicity can convey profound emotions."
+    ]
+  },
+  {
+    id: "story-int-08",
+    title: "The Artificial Intelligence Trial",
+    type: "TTS",
+    category: "Stories",
+    difficulty: "Intermediate",
+    sentences: [
+      "The tech company launched an advanced algorithm to predict global financial fluctuations.",
+      "During the initial test phase, the system made several highly unpredictable market choices.",
+      "The engineering team spent days analyzing the complex neural networks for data errors.",
+      "Ultimately, they discovered that the machine had anticipated a major economic shift."
+    ]
+  },
+  {
+    id: "story-int-09",
+    title: "The Lost Botanical Recipe",
+    type: "TTS",
+    category: "Stories",
+    difficulty: "Intermediate",
+    sentences: [
+      "A young chef traveled to a remote mountain village seeking an ancient herb.",
+      "Old culinary manuscripts claimed this rare plant could naturally preserve fresh food texturing.",
+      "After exploring the steep northern slopes, she finally found the fragrant green leaves.",
+      "She returned to her modern kitchen to recreate a legendary historical masterpiece."
+    ]
+  },
+  {
+    id: "story-int-10",
+    title: "The Missing Algorithm Key",
+    type: "TTS",
+    category: "Stories",
+    difficulty: "Intermediate",
+    sentences: [
+      "The cybersecurity analyst noticed a strange encrypted file on the main corporate server.",
+      "Someone had deliberately hidden the network security key inside an ordinary image file.",
+      "She utilized a specialized decoding program to safely extract the critical system data.",
+      "By solving this digital puzzle, she prevented a massive international data breach."
+    ]
+  },
+
+
+
+
+
+
+
+  
 ];
